@@ -40,71 +40,134 @@ export default function SignUp({ navigation }) {
   }
 
   return (
-    <ScrollView style={{ padding: 30 }}>
-      <View style={{ padding: 10 }}>
-        <Text>Email</Text>
-      </View>
+    <View style={styles.container}>
+      <ScrollView>
+        <View style={styles.firstnameInput}>
+          <Text
+            style={styles.text}
+          >
+            First Name:
+          </Text>
+          <TextInput
+            placeholder={"Enter your First Name"}
+            textAlign='center'
+            style={styles.textInputsname}
+          />
+          </View>
+          <View style={styles.lastnameinput}>
+          <Text
+            style={styles.text}
+          >
+            Last Name:
+          </Text>
+          <TextInput
+            placeholder={"Enter your Last Name"}
+            textAlign='center'
+            style={styles.textInputsname}
+          />
+        </View>
 
-      <View style={{ padding: 10 }}>
-        <TextInput
-          placeholder={"Enter your email"}
-          onChangeText={setEmail}
-          value={email}
-        />
-      </View>
+        <View style={styles.inputs}>
+          <Text
+            style={styles.text}
+          >
+            Email:
+          </Text>
+          <TextInput
+            placeholder={"Enter your email"}
+            onChangeText={setEmail}
+            value={email}
+            textAlign='center'
+            style={styles.textInputs}
+          />
+        </View>
+        <View style={styles.inputs}>
+          <Text
+            style={styles.text}
+          >
+            Password:
+          </Text>
+          <TextInput
+            placeholder={"Enter your Password"}
+            secureTextEntry={true}
+            onChangeText={setPassword}
+            value={password}
+            textAlign='center'
+            style={styles.textInputs}
+          />
+        </View>
+        <View style={styles.inputs}>
+          <Text
+            style={styles.text}
+          >
+            Confirm Password:
+          </Text>
+          <TextInput
+            placeholder={"Enter your Password again"}
+            textAlign='center'
+            style={styles.textInputs}
+          />
+        </View>
+        <View style={styles.inputs}>
+          <Text
+            style={styles.text}
+          >
+            Phone:
+          </Text>
+          <TextInput
+            placeholder={"Enter your Phone"}
+            textAlign='center'
+            style={styles.textInputs}
+          />
+        </View>
 
-      <View style={{ padding: 10 }}>
-        <Text>Password</Text>
-      </View>
-
-      <View style={{ padding: 10 }}>
-        <TextInput
-          placeholder={"Enter your Password"}
-          secureTextEntry={true}
-          onChangeText={setPassword}
-          value={password}
-        />
-      </View>
-
-      <View style={{ padding: 10 }}>
-        <Text>Confirm Password</Text>
-      </View>
-
-      <View style={{ padding: 10 }}>
-        <TextInput placeholder={"Enter your Password again"} />
-      </View>
-
-      <View style={{ padding: 10 }}>
-        <Text>First Name</Text>
-      </View>
-
-      <View style={{ padding: 10 }}>
-        <TextInput placeholder={"Enter your First Name"} />
-      </View>
-
-      <View style={{ padding: 10 }}>
-        <Text>Last Name</Text>
-      </View>
-
-      <View style={{ padding: 10 }}>
-        <TextInput placeholder={"Enter your Last Name"} />
-      </View>
-
-      <View style={{ padding: 10 }}>
-        <Text>Phone</Text>
-      </View>
-
-      <View style={{ padding: 10 }}>
-        <TextInput placeholder={"Enter your Phone"} />
-      </View>
-
-      <View style={{ padding: 10 }}>
+        <View style={styles.buttonview}>
         <Button title={"Create Account"} onPress={registerUser} />
-      </View>
+        </View>
 
-      <StatusBar style="auto" />
-    </ScrollView>
+        <StatusBar style="auto" />
+      </ScrollView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: 50,
+    alignItems: 'center',
+    flex: 1,
+  },
+  inputs: {
+    flexDirection: 'row',
+    padding: 10,
+  },
+  firstnameInput: {
+    flexDirection: 'row',
+    padding: 10,
+  },
+  lastnameinput: {
+    flexDirection: 'row',
+    padding: 10,
+  },
+  text: {
+    padding: 10
+  },
+  textInputsname: {
+    backgroundColor: '#d3d3d3',
+    width: '100%',
+    borderRadius: 40,
+    width: 200,
+    padding:10,
+  },
+  textInputs: {
+    backgroundColor: '#d3d3d3',
+    width: '100%',
+    borderRadius: 40,
+    width: 250,
+    padding: 10,
+  },
+  buttonview:{
+    alignItems: "center",
+    padding: 20,
+  }
+});
