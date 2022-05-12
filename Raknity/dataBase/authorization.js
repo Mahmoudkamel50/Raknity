@@ -1,5 +1,6 @@
-import {app} from "./configuration";
+import {app , auth} from "./configuration";
 import {onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, getAuth} from "firebase/auth";
+
 
 const authentication = getAuth(app);
 
@@ -7,6 +8,13 @@ async function isSignedIn() {
     console.log('from isSignedIn method: ', authentication.currentUser);
     return await authentication.currentUser != null;
 }
+
+onAuthStateChanged(auth, (user) => {
+    if (user != null) {
+      console.log("We are authenticated now!");
+    }
+
+  });
 
 async function getUserUId() {
     if (authentication.currentUser != null) {

@@ -2,9 +2,11 @@ import { StyleSheet, TextInput, View, Text } from "react-native";
 import React, { useState, useContext } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { AuthContext } from "../dataBase/Utils";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { login } from "../dataBase/authorization";
 
-const SignIn = () => {
-  const { signIn } = useContext(AuthContext);
+const SignIn = ({navigation}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -43,7 +45,7 @@ const SignIn = () => {
           backgroundColor={"#3ded97"}
           borderRadius={40}
           onPress={() => {
-            signIn(email, password)
+            login(email, password)
               .then(setError(""))
               .catch((error) => setError(error.message));
           }}
@@ -54,7 +56,7 @@ const SignIn = () => {
       </View>
       <Text
         style={styles.noAccount}
-        onPress={() => alert('Should navigate to "Sign up" page')}
+        onPress={() => navigation.navigate("Sign up")}
       >
         Don't have an account?
       </Text>

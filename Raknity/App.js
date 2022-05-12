@@ -1,15 +1,45 @@
 import { StatusBar } from "expo-status-bar";
+import { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import SignUp  from "./components/SignUp";
-import SignIn  from "./components/SignIn";
+import SignIn from "./components/SignIn";
+import AuthorizationStack from "./components/Stacks/AuthorizationStack";
+import HomepageStack from "./components/Stacks/HomepageStack";
+import Homepage from "./components/Homepage";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./dataBase/configuration";
+
+
+
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <SignUp />
-      <StatusBar style="auto" />
-    </View>
-  );
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      if (user) {
+        setUserEmail(JSON.stringify(user.email));
+      }
+    });
+
+    return () => {
+      unsub();
+    };
+  }, []);
+
+  const [user, setUser] = useState(undefined)
+  const [userEmail, setUserEmail] = useState("");
+
+      if(user){
+        return(
+        <Homepage/>
+        );
+      }
+      else{
+        return(
+        <AuthorizationStack/>
+        )
+      }
+
 }
 
 const styles = StyleSheet.create({
@@ -20,3 +50,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
