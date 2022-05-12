@@ -1,10 +1,12 @@
 import { StyleSheet, TextInput, View, Text } from 'react-native'
-import React, {useState} from 'react'
+import React, { useState, useContext } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { signIn } from '../Authorization/SignIn';
+import { AuthContext } from '../dataBase/Utils';
 
 const SignIn = () => {
 
+  const { signIn } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
