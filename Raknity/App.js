@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import SignIn from "./components/SignIn";
 import AuthorizationStack from "./components/Stacks/AuthorizationStack";
-import HomepageStack from "./components/Stacks/HomepageStack";
 import Homepage from "./components/Homepage";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./dataBase/configuration";
