@@ -26,7 +26,7 @@ export default function SignUp({ navigation }) {
       register(email, password)
         .then(() => {
           console.log(getUserUId());
-
+ 
           getUserUId().then((id) => {
             // console.log(id);
             addUser({ id: id, email, password });
