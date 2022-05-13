@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { getGovts, getGovCities, getCityLocations } from '../dataBase/APIFunctions';
+import { getGovts, getGovCities, getCityLocations , getlocpartitions} from '../dataBase/APIFunctions';
 import { Picker } from '@react-native-picker/picker';
 
 const Homepage = () => {
@@ -33,12 +33,25 @@ const Homepage = () => {
     }
   }
 
+  function updatePartitionsList(id , ctName , locName){
+    if (locName != ""){
+      getlocpartitions(id , ctName , locName).then((data) => {
+        setPartitions(data.partitions);
+        data.partitions.map((e) => {
+          console.log(e.partitionName)
+        })
+      })
+    }
+  }
+
   const [govts, setGovts] = useState([]);
   const [chosenGovt, setChosenGovt] = useState("");
   const [cities, setCities] = useState([]);
   const [chosenCt, setChosenCt] = useState("");
   const [locations, setLocations] = useState([]);
   const [chosenLoc, setChosenLoc] = useState("");
+  const [partitions, setPartitions] = useState([]);
+  const [chosenPart, setChosenPart] = useState("");
 
   return (
     <View style={{ flexDirection: 'column', padding: 30 }}>
@@ -86,6 +99,7 @@ const Homepage = () => {
         selectedValue={chosenLoc}
         onValueChange={(loc, index) => {
           setChosenLoc(loc);
+          updatePartitionsList(chosenGovt , chosenCt , loc) ;
         }}
         >
           <Picker.Item label='Nothing selected' value={""}/>
@@ -98,9 +112,28 @@ const Homepage = () => {
           }
         </Picker>
       </View>
+      <View>
+        <Text>Choose a Partition:</Text>
+        <Picker
+          selectedValue={chosenPart}
+          onValueChange={(part , index) => {
+            setChosenPart(part);
+          }}
+        >
+          <Picker.Item label='Nothing selected' value={""}/>
+          {
+            partitions && partitions.length ? partitions.map((e , index) => {
+              return(
+                <Picker.Item label={e.partitionName} value={e.partitionName} key={index}/>
+              )
+            }) : null
+          }
+        </Picker>
+      </View>
       <Text>{chosenGovt}</Text>
       <Text>{chosenCt}</Text>
       <Text>{chosenLoc}</Text>
+      <Text>{chosenPart}</Text>
     </View>
   )
 }
