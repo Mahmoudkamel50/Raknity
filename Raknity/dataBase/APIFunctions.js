@@ -25,8 +25,8 @@ async function getGovCities(id) {
 }
 
 async function getCityLocations(id, cityName) {
-    const allLocs = await getGovCities(id);
-    const citiesList = allLocs.cities;
+    const allcities = await getGovCities(id);
+    const citiesList = allcities.cities;
     let wantedData;
     for (let i = 0; i < citiesList.length; i++) {
         if (citiesList[i].cityName == cityName) {
@@ -38,16 +38,29 @@ async function getCityLocations(id, cityName) {
 }
 
 async function getlocpartitions(id, cityName, locationName) {
-    const allpart = await getCityLocations(id, cityName);
-    const partList = allpart.locations;
+    const allLocs = await getCityLocations(id, cityName);
+    const locList = allLocs.locations;
     let wantedData;
-    for (let i = 0; i < partList.length; i++) {
-        if (partList[i].locationName == locationName) {
-            wantedData = partList[i];
+    for (let i = 0; i < locList.length; i++) {
+        if (locList[i].locationName == locationName) {
+            wantedData = locList[i];
         }
     }
     console.log(wantedData);
     return wantedData;
 }
 
-export { getGovts, getGovCities, getCityLocations, getlocpartitions };
+async function getAllSlots(id, cityName, locationName, partitionName) {
+  const allParts = await getlocpartitions(id, cityName, locationName);
+  const partList = allParts.partitions;
+  let wantedData;
+  for (let i = 0; i < partList.length; i++) {
+    if (partList[i].partitionName == partitionName) {
+      wantedData = partList[i];
+    }    
+  }
+  console.log(wantedData);
+  return wantedData;
+}
+
+export { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots };
