@@ -16,7 +16,7 @@ export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
-  const [lastName, setLasttName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [history, setHistory] = useState([]);
 
@@ -54,6 +54,7 @@ export default function SignUp({ navigation }) {
           <Text style={styles.text}>First Name:</Text>
           <TextInput
             placeholder={"Enter your First Name"}
+            onChangeText={setFirstName}
             textAlign="center"
             style={styles.textInputsname}
           />
@@ -62,6 +63,7 @@ export default function SignUp({ navigation }) {
           <Text style={styles.text}>Last Name:</Text>
           <TextInput
             placeholder={"Enter your Last Name"}
+            onChangeText={setLastName}
             textAlign="center"
             style={styles.textInputsname}
           />
@@ -101,6 +103,7 @@ export default function SignUp({ navigation }) {
           <Text style={styles.text}>Phone:</Text>
           <TextInput
             placeholder={"Enter your Phone"}
+            onChangeText={setPhoneNumber}
             textAlign="center"
             style={styles.textInputs}
           />
