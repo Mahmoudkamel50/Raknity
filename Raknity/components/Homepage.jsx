@@ -1,6 +1,6 @@
-import { View, Text } from 'react-native'
+import { View, Text , Button} from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots } from '../dataBase/APIFunctions';
+import { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition } from '../dataBase/APIFunctions';
 import { Picker } from '@react-native-picker/picker';
 
 const Homepage = () => {
@@ -55,6 +55,10 @@ const Homepage = () => {
     }
   }
 
+  function sumbit(){
+    submition(chosenGovt, cities, citiesIndex, locIndex, partIndex, slotIndex);
+  }
+
   const [govts, setGovts] = useState([]);
   const [chosenGovt, setChosenGovt] = useState("");
   const [cities, setCities] = useState([]);
@@ -65,6 +69,11 @@ const Homepage = () => {
   const [chosenPart, setChosenPart] = useState("");
   const [slots, setSlots] = useState([]);
   const [chosenSlot, setChosenSlot] = useState("");
+  const [slotIndex, setSlotIndex] = useState("");
+  const [citiesIndex, setCitiesIndex] = useState("");
+  const [locIndex, setLocIndex] = useState("");
+  const [partIndex, setPartIndex] = useState("");
+  
 
   return (
     <View style={{ flexDirection: 'column', padding: 30 }}>
@@ -94,6 +103,7 @@ const Homepage = () => {
           onValueChange={(city, index) => {
             setChosenCt(city);
             updateLocationsList(chosenGovt, city);
+            setCitiesIndex(index-1);
           }}
         >
           <Picker.Item label='Nothing selected' value={""} />
@@ -113,6 +123,7 @@ const Homepage = () => {
           onValueChange={(loc, index) => {
             setChosenLoc(loc);
             updatePartitionsList(chosenGovt, chosenCt, loc);
+            setLocIndex(index-1);
           }}
         >
           <Picker.Item label='Nothing selected' value={""} />
@@ -132,6 +143,7 @@ const Homepage = () => {
           onValueChange={(part, index) => {
             setChosenPart(part);
             updateSlotList(chosenGovt, chosenCt, chosenLoc, part);
+            setPartIndex(index-1);
           }}
         >
           <Picker.Item label='Nothing selected' value={""} />
@@ -150,6 +162,7 @@ const Homepage = () => {
         selectedValue={chosenSlot}
         onValueChange={(slot, index) => {
           setChosenSlot(slot);
+          setSlotIndex(index-1);
         }}
         >
           <Picker.Item label='Nothing selected' value={""} />
@@ -168,6 +181,11 @@ const Homepage = () => {
       <Text>{chosenCt}</Text>
       <Text>{chosenLoc}</Text>
       <Text>{chosenPart}</Text>
+      <Button 
+      title='Submit'
+      onPress={() => 
+        sumbit()}
+      />
     </View>
   )
 }
