@@ -9,48 +9,35 @@ const Homepage = () => {
     getGovts().then((data) => {
       setGovts(data);
     });
-  },[]);  
+  }, []);
 
-  // useEffect(() => {
-  //     if (chosenGovt != "") {
-  //       getCities(chosenGovt).then((data) => {
-  //         setGovt(data);
-  //         let cts = govt.cities;
-  //         setCities(cts);
-  //       });
-  //       getGovts(chosenGovt);
-  //     }
-  //   }
-  // ,);
-
-  const govRef = useRef();
-  useEffect(() => {
-    console.log("useEffect");
-    if (chosenGovt != "") {
-      getCities(chosenGovt).then((data) => {
-        setGovt(data);
-        let cts = govt.cities;
-        setCities(cts);
-      });
-      // getGovts(chosenGovt);
+  function updateCitiesList(govt) {
+    if (govt != "") {
+      getCities(govt).then((data) => {
+        setCities(data.cities);
+        data.cities.map((e) => {
+          console.log(e.cityName);
+        })
+      })
     }
-  },);
+  }
 
   const [govts, setGovts] = useState([]);
   const [chosenGovt, setChosenGovt] = useState("");
   const [govt, setGovt] = useState([]);
   const [cities, setCities] = useState([]);
   const [chosenCt, setChosenCt] = useState("");
+  const [ctpickerval, setCtpickerval] = useState("");
 
   return (
     <View style={{ flexDirection: 'column', padding: 30 }}>
       <View>
         <Text>Choose a goverment:</Text>
-        <Picker 
-          ref={govRef}
+        <Picker
           selectedValue={chosenGovt}
           onValueChange={(govt, index) => {
             setChosenGovt(govt);
+            updateCitiesList(govt);
           }}
         >
           <Picker.Item label='Nothing selected' value={""} />
@@ -82,6 +69,7 @@ const Homepage = () => {
         </Picker>
       </View>
       <Text>{chosenGovt}</Text>
+      <Text>{chosenCt}</Text>
     </View>
   )
 }

@@ -18,7 +18,6 @@ async function getCities(id) {
     for (let i = 0; i < allCities.length; i++) {
         if (allCities[i].id == id) {
             wantedData = allCities[i];
-            console.log(wantedData);
         }
     }
     return wantedData;
