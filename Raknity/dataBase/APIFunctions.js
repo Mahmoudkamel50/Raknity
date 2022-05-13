@@ -11,7 +11,7 @@ async function getGovts() {
   return locList;
 }
 
-async function getCities(id) {
+async function getGovCities(id) {
   const allCities = await getGovts();
   console.log(allCities);
   let wantedData;
@@ -20,13 +20,21 @@ async function getCities(id) {
       wantedData = allCities[i];
     }
   }
+  console.log(wantedData);
   return wantedData;
 }
-async function getGovt(id) {
-  const locCol = collection(db, "locations");
-  const doc = await getDoc(locCol, id);
-  console.log(doc);
-  return doc;
+
+async function getCityLocations(id, cityName) {
+  const allLocs = await getGovCities(id);
+  const citiesList = allLocs.cities;
+  let wantedData;
+  for (let i = 0; i < citiesList.length; i++) { 
+    if (citiesList[i].cityName == cityName) {
+      wantedData = citiesList[i];
+    }
+  }
+  console.log(wantedData);
+  return wantedData;
 }
 
-export { getGovts, getCities, getGovt };
+export { getGovts, getGovCities, getCityLocations };
