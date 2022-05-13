@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { getGovts, getGovCities, getCityLocations , getlocpartitions} from '../dataBase/APIFunctions';
+import { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots } from '../dataBase/APIFunctions';
 import { Picker } from '@react-native-picker/picker';
 
 const Homepage = () => {
@@ -33,14 +33,25 @@ const Homepage = () => {
     }
   }
 
-  function updatePartitionsList(id , ctName , locName){
-    if (locName != ""){
-      getlocpartitions(id , ctName , locName).then((data) => {
+  function updatePartitionsList(id, ctName, locName) {
+    if (locName != "") {
+      getlocpartitions(id, ctName, locName).then((data) => {
         setPartitions(data.partitions);
         data.partitions.map((e) => {
           console.log(e.partitionName)
         })
       })
+    }
+  }
+
+  function updateSlotList(id, ctName, locName, partName) {
+    if(partName != "") {
+      getAllSlots(id, ctName, locName, partName).then((data) => {
+        setSlots(data.slots);
+        data.slots.map((e) => {
+          console.log(e);
+        })
+      });
     }
   }
 
@@ -52,6 +63,8 @@ const Homepage = () => {
   const [chosenLoc, setChosenLoc] = useState("");
   const [partitions, setPartitions] = useState([]);
   const [chosenPart, setChosenPart] = useState("");
+  const [slots, setSlots] = useState([]);
+  const [chosenSlot, setChosenSlot] = useState("");
 
   return (
     <View style={{ flexDirection: 'column', padding: 30 }}>
@@ -96,17 +109,17 @@ const Homepage = () => {
       <View>
         <Text>Choose location:</Text>
         <Picker
-        selectedValue={chosenLoc}
-        onValueChange={(loc, index) => {
-          setChosenLoc(loc);
-          updatePartitionsList(chosenGovt , chosenCt , loc) ;
-        }}
+          selectedValue={chosenLoc}
+          onValueChange={(loc, index) => {
+            setChosenLoc(loc);
+            updatePartitionsList(chosenGovt, chosenCt, loc);
+          }}
         >
-          <Picker.Item label='Nothing selected' value={""}/>
+          <Picker.Item label='Nothing selected' value={""} />
           {
             locations && locations.length ? locations.map((e, index) => {
-              return(
-                <Picker.Item label={e.locationName} value={e.locatioName} key={index}/>
+              return (
+                <Picker.Item label={e.locationName} value={e.locatioName} key={index} />
               )
             }) : null
           }
@@ -116,16 +129,37 @@ const Homepage = () => {
         <Text>Choose a Partition:</Text>
         <Picker
           selectedValue={chosenPart}
-          onValueChange={(part , index) => {
+          onValueChange={(part, index) => {
             setChosenPart(part);
+            updateSlotList(chosenGovt, chosenCt, chosenLoc, part);
           }}
         >
-          <Picker.Item label='Nothing selected' value={""}/>
+          <Picker.Item label='Nothing selected' value={""} />
           {
-            partitions && partitions.length ? partitions.map((e , index) => {
-              return(
-                <Picker.Item label={e.partitionName} value={e.partitionName} key={index}/>
+            partitions && partitions.length ? partitions.map((e, index) => {
+              return (
+                <Picker.Item label={e.partitionName} value={e.partitionName} key={index} />
               )
+            }) : null
+          }
+        </Picker>
+      </View>
+      <View>
+        <Text>Choose parking slot:</Text>
+        <Picker
+        selectedValue={chosenSlot}
+        onValueChange={(slot, index) => {
+          setChosenSlot(slot);
+        }}
+        >
+          <Picker.Item label='Nothing selected' value={""} />
+          {
+            slots && slots.length ? slots.map((e, index) => {
+              if(e == false) {
+                return (
+                  <Picker.Item label={index} value={e} key={index}/>
+                )
+              }
             }) : null
           }
         </Picker>
