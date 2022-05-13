@@ -1,5 +1,5 @@
 import { db } from "./configuration";
-import { getDocs, doc, collection, getDoc } from "firebase/firestore";
+import { getDocs, doc, collection, updateDoc } from "firebase/firestore";
 
 async function getGovts() {
     const locCol = collection(db, "locations");
@@ -51,16 +51,32 @@ async function getlocpartitions(id, cityName, locationName) {
 }
 
 async function getAllSlots(id, cityName, locationName, partitionName) {
-  const allParts = await getlocpartitions(id, cityName, locationName);
-  const partList = allParts.partitions;
-  let wantedData;
-  for (let i = 0; i < partList.length; i++) {
-    if (partList[i].partitionName == partitionName) {
-      wantedData = partList[i];
-    }    
-  }
-  console.log(wantedData);
-  return wantedData;
+    const allParts = await getlocpartitions(id, cityName, locationName);
+    const partList = allParts.partitions;
+    let wantedData;
+    for (let i = 0; i < partList.length; i++) {
+        if (partList[i].partitionName == partitionName) {
+            wantedData = partList[i];
+        }
+    }
+    console.log(wantedData);
+    return wantedData;
 }
 
-export { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots };
+async function submition(id, citiesList, cityindex, locindex, partindex, slotindex) {
+    try {
+
+        citiesList[cityindex].locations[locindex].partitions[partindex].slots[slotindex] = true;
+        const docRef = doc(db, "locations", id);
+        await updateDoc(docRef, {
+            cities: citiesList
+        }).then(console.log('slot updated!'))
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+
+
+
+export { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition };
