@@ -10,10 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { register, getUserUId } from "../dataBase/authorization";
 import { addUser, getUserById } from "../dataBase/user";
-
-const routeName = "SignUp";
-
-export { routeName };
+import SignIn from "./SignIn";
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
@@ -31,7 +28,7 @@ export default function SignUp({ navigation }) {
             // console.log(id);
             addUser({ id: id, email, password });
           });
-          navigation.navigate("SignIn");
+          navigation.navigate("Sign in");
         })
         .catch((e) => {
           console.log(e.message);
@@ -104,6 +101,7 @@ export default function SignUp({ navigation }) {
           </Text>
           <TextInput
             placeholder={"Enter your Password again"}
+            secureTextEntry={true}
             textAlign='center'
             style={styles.textInputs}
           />
