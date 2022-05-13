@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
-import React, { useEffect, useState, useRef } from 'react'
-import { getGovts, getCities } from '../dataBase/APIFunctions';
+import React, { useEffect, useState } from 'react'
+import { getGovts, getGovCities, getCityLocations } from '../dataBase/APIFunctions';
 import { Picker } from '@react-native-picker/picker';
 
 const Homepage = () => {
@@ -13,10 +13,21 @@ const Homepage = () => {
 
   function updateCitiesList(govt) {
     if (govt != "") {
-      getCities(govt).then((data) => {
+      getGovCities(govt).then((data) => {
         setCities(data.cities);
         data.cities.map((e) => {
           console.log(e.cityName);
+        })
+      });
+    }
+  }
+
+  function updateLocationsList(id, loc) {
+    if (loc != "") {
+      getCityLocations(id, loc).then((data) => {
+        setLocations(data.locations);
+        data.locations.map((e) => {
+          console.log(e.locationName)
         })
       })
     }
@@ -24,10 +35,10 @@ const Homepage = () => {
 
   const [govts, setGovts] = useState([]);
   const [chosenGovt, setChosenGovt] = useState("");
-  const [govt, setGovt] = useState([]);
   const [cities, setCities] = useState([]);
   const [chosenCt, setChosenCt] = useState("");
-  const [ctpickerval, setCtpickerval] = useState("");
+  const [locations, setLocations] = useState([]);
+  const [chosenLoc, setChosenLoc] = useState("");
 
   return (
     <View style={{ flexDirection: 'column', padding: 30 }}>
@@ -56,6 +67,7 @@ const Homepage = () => {
           selectedValue={chosenCt}
           onValueChange={(city, index) => {
             setChosenCt(city);
+            updateLocationsList(chosenGovt, city);
           }}
         >
           <Picker.Item label='Nothing selected' value={""} />
@@ -68,8 +80,27 @@ const Homepage = () => {
           }
         </Picker>
       </View>
+      <View>
+        <Text>Choose location:</Text>
+        <Picker
+        selectedValue={chosenLoc}
+        onValueChange={(loc, index) => {
+          setChosenLoc(loc);
+        }}
+        >
+          <Picker.Item label='Nothing selected' value={""}/>
+          {
+            locations && locations.length ? locations.map((e, index) => {
+              return(
+                <Picker.Item label={e.locationName} value={e.locatioName} key={index}/>
+              )
+            }) : null
+          }
+        </Picker>
+      </View>
       <Text>{chosenGovt}</Text>
       <Text>{chosenCt}</Text>
+      <Text>{chosenLoc}</Text>
     </View>
   )
 }
