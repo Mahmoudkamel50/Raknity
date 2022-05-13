@@ -57,6 +57,7 @@ const Homepage = () => {
 
   function sumbit(){
     submition(chosenGovt, cities, citiesIndex, locIndex, partIndex, slotIndex);
+
   }
 
   const [govts, setGovts] = useState([]);
@@ -171,6 +172,11 @@ const Homepage = () => {
               if(e == false) {
                 return (
                   <Picker.Item label={index} value={e} key={index}/>
+                )
+              }
+              else{
+                return (
+                  <Picker.Item label={index + " Occupied"} value={""} key={index}/>
                 )
               }
             }) : null

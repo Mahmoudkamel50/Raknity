@@ -77,6 +77,4 @@ async function submition(id, citiesList, cityindex, locindex, partindex, slotind
 }
 
 
-
-
 export { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition };
