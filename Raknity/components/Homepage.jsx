@@ -2,14 +2,17 @@ import { View, Text, Button, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition } from '../dataBase/APIFunctions';
 import { Picker } from '@react-native-picker/picker';
-import { addToUserHistory } from '../dataBase/user';
+import { addToUserHistory, getUserById } from '../dataBase/user';
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const Homepage = ({user}) => {
+const Homepage = ({ user }) => {
 
   useEffect(() => {
     getGovts().then((data) => {
       setGovts(data);
+    });
+    getUserById(user.uid).then((data) => {
+      setFirstName(data[0].firstName);
     });
   }, []);
 
@@ -66,6 +69,7 @@ const Homepage = ({user}) => {
     addToUserHistory(user.uid, chosenGovt, chosenCt, chosenLoc, chosenPart, slotIndex, url);
   }
 
+  const [firstName, setFirstName] = useState("");
   const [govts, setGovts] = useState([]);
   const [chosenGovt, setChosenGovt] = useState("");
   const [cities, setCities] = useState([]);
@@ -85,14 +89,17 @@ const Homepage = ({user}) => {
 
   return (
     <View style={{ flexDirection: 'column', padding: 30 }}>
-      <View>
-        <Text>Choose a goverment:</Text>
+      <Text style={styles.welcome}>Hi, {firstName}</Text>
+      <Text style={{fontSize: 20, paddingBottom: 5}}>Start your booking</Text>
+      <View style={styles.pckView}>
+        <Text style={styles.textStyle}>Choose a goverment:</Text>
         <Picker
           selectedValue={chosenGovt}
           onValueChange={(govt, index) => {
             setChosenGovt(govt);
             updateCitiesList(govt);
           }}
+          style={styles.pck}
         >
           <Picker.Item label='Nothing selected' value={""} />
           {
@@ -104,8 +111,8 @@ const Homepage = ({user}) => {
           }
         </Picker>
       </View>
-      <View>
-        <Text>Choose a city:</Text>
+      <View style={styles.pckView}>
+        <Text style={styles.textStyle}>Choose a city:</Text>
         <Picker
           selectedValue={chosenCt}
           onValueChange={(city, index) => {
@@ -113,6 +120,7 @@ const Homepage = ({user}) => {
             updateLocationsList(chosenGovt, city);
             setCitiesIndex(index - 1);
           }}
+          style={styles.pck}
         >
           <Picker.Item label='Nothing selected' value={""} />
           {
@@ -124,8 +132,8 @@ const Homepage = ({user}) => {
           }
         </Picker>
       </View>
-      <View>
-        <Text>Choose location:</Text>
+      <View style={styles.pckView}>
+        <Text style={styles.textStyle}>Choose location:</Text>
         <Picker
           selectedValue={chosenLoc}
           onValueChange={(loc, index) => {
@@ -133,6 +141,7 @@ const Homepage = ({user}) => {
             updatePartitionsList(chosenGovt, chosenCt, loc);
             setLocIndex(index - 1);
           }}
+          style={styles.pck}
         >
           <Picker.Item label='Nothing selected' value={""} />
           {
@@ -144,8 +153,8 @@ const Homepage = ({user}) => {
           }
         </Picker>
       </View>
-      <View>
-        <Text>Choose a Partition:</Text>
+      <View style={styles.pckView}>
+        <Text style={styles.textStyle}>Choose a Partition:</Text>
         <Picker
           selectedValue={chosenPart}
           onValueChange={(part, index) => {
@@ -153,6 +162,7 @@ const Homepage = ({user}) => {
             updateSlotList(chosenGovt, chosenCt, chosenLoc, part);
             setPartIndex(index - 1);
           }}
+          style={styles.pck}
         >
           <Picker.Item label='Nothing selected' value={""} />
           {
@@ -164,14 +174,15 @@ const Homepage = ({user}) => {
           }
         </Picker>
       </View>
-      <View>
-        <Text>Choose parking slot:</Text>
+      <View style={styles.pckView}>
+        <Text style={styles.textStyle}>Choose parking slot:</Text>
         <Picker
           selectedValue={chosenSlot}
           onValueChange={(slot, index) => {
             setChosenSlot(slot);
             setSlotIndex(index - 1);
           }}
+          style={styles.pck}
         >
           <Picker.Item label='Nothing selected' value={""} />
           {
@@ -190,20 +201,22 @@ const Homepage = ({user}) => {
           }
         </Picker>
       </View>
-      <View style={styles.BTview}>
-        <Icon.Button
-          name='plus'
-          onPress={() => {
-            sumbit();
-            addToHistory();
-          }}
-          backgroundColor={'#3ded97'}
-          borderRadius={40}
-        >
-          <Text>
-            Submit
-          </Text>
-        </Icon.Button>
+      <View >
+        <View style={styles.BTview}>
+          <Icon.Button
+            name='plus'
+            onPress={() => {
+              sumbit();
+              addToHistory();
+            }}
+            backgroundColor={'#3ded97'}
+            borderRadius={40}
+          >
+            <Text>
+              Submit
+            </Text>
+          </Icon.Button>
+        </View>
       </View>
     </View>
   )
@@ -214,5 +227,23 @@ export default Homepage
 const styles = StyleSheet.create({
   BTview: {
     alignItems: 'center',
+    paddingTop: '50%',
+  },
+  pck: {
+    paddingVertical: 5,
+    borderRadius: 40,
+    backgroundColor: '#c7ffc7'
+  },
+  textStyle: {
+    fontSize: 16,
+    paddingVertical: 5,
+  },
+  pckView: {
+    paddingBottom: 10,
+  },
+  welcome: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    paddingBottom: 10,
   }
 })
