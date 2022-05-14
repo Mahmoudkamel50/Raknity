@@ -50,22 +50,22 @@ export default function SignUp({ navigation }) {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <View style={styles.firstnameInput}>
+        <View style={styles.inputs}>
           <Text style={styles.text}>First Name:</Text>
           <TextInput
             placeholder={"Enter your First Name"}
             onChangeText={setFirstName}
             textAlign="center"
-            style={styles.textInputsname}
+            style={styles.textInputs}
           />
         </View>
-        <View style={styles.lastnameinput}>
+        <View style={styles.inputs}>
           <Text style={styles.text}>Last Name:</Text>
           <TextInput
             placeholder={"Enter your Last Name"}
             onChangeText={setLastName}
             textAlign="center"
-            style={styles.textInputsname}
+            style={styles.textInputs}
           />
         </View>
 
@@ -110,52 +110,41 @@ export default function SignUp({ navigation }) {
         </View>
 
         <View style={styles.buttonview}>
-          <Button title={"Create Account"} onPress={registerUser} />
+          <Button title={"Create Account"} onPress={registerUser} color="#3ded97"/>
         </View>
 
         <StatusBar style="auto" />
-      </ScrollView>
+        </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 50,
-    alignItems: "center",
+    flexDirection: "column",
+    padding: 30,
     flex: 1,
   },
   inputs: {
     flexDirection: "row",
-    padding: 10,
-  },
-  firstnameInput: {
-    flexDirection: "row",
-    padding: 10,
-  },
-  lastnameinput: {
-    flexDirection: "row",
-    padding: 10,
+    alignItems: "center",
+    paddingBottom: 40,
+    width: "97%",
+
   },
   text: {
-    padding: 10,
-  },
-  textInputsname: {
-    backgroundColor: "#d3d3d3",
-    width: "100%",
-    borderRadius: 40,
-    width: 200,
-    padding: 10,
+    fontSize: 16,
+    paddingRight: 10,
   },
   textInputs: {
+    flex: 1,
     backgroundColor: "#d3d3d3",
-    width: "100%",
     borderRadius: 40,
-    width: 250,
-    padding: 10,
+    padding: 5,
+    width: 100,
+
   },
   buttonview: {
     alignItems: "center",
-    padding: 20,
   },
 });

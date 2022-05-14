@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    backgroundColor: "#c0c0c0",
+    backgroundColor: "#d3d3d3",
     borderRadius: 40,
   },
   BTView: {
