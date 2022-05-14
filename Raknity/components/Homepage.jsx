@@ -1,7 +1,8 @@
-import { View, Text , Button} from 'react-native'
+import { View, Text, Button } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition } from '../dataBase/APIFunctions';
 import { Picker } from '@react-native-picker/picker';
+import { addToUserHistory } from '../dataBase/user';
 
 const Homepage = () => {
 
@@ -37,6 +38,7 @@ const Homepage = () => {
     if (locName != "") {
       getlocpartitions(id, ctName, locName).then((data) => {
         setPartitions(data.partitions);
+        setUrl(data.url);
         data.partitions.map((e) => {
           console.log(e.partitionName)
         })
@@ -45,7 +47,7 @@ const Homepage = () => {
   }
 
   function updateSlotList(id, ctName, locName, partName) {
-    if(partName != "") {
+    if (partName != "") {
       getAllSlots(id, ctName, locName, partName).then((data) => {
         setSlots(data.slots);
         data.slots.map((e) => {
@@ -55,9 +57,12 @@ const Homepage = () => {
     }
   }
 
-  function sumbit(){
+  function sumbit() {
     submition(chosenGovt, cities, citiesIndex, locIndex, partIndex, slotIndex);
+  }
 
+  function addToHistory() {
+    addToUserHistory("QqimFkMPbBWHflSGFTjIji4xLEy2", chosenGovt, chosenCt, chosenLoc, chosenPart, slotIndex, url);
   }
 
   const [govts, setGovts] = useState([]);
@@ -74,7 +79,8 @@ const Homepage = () => {
   const [citiesIndex, setCitiesIndex] = useState("");
   const [locIndex, setLocIndex] = useState("");
   const [partIndex, setPartIndex] = useState("");
-  
+  const [url, setUrl] = useState("");
+
 
   return (
     <View style={{ flexDirection: 'column', padding: 30 }}>
@@ -104,7 +110,7 @@ const Homepage = () => {
           onValueChange={(city, index) => {
             setChosenCt(city);
             updateLocationsList(chosenGovt, city);
-            setCitiesIndex(index-1);
+            setCitiesIndex(index - 1);
           }}
         >
           <Picker.Item label='Nothing selected' value={""} />
@@ -124,7 +130,7 @@ const Homepage = () => {
           onValueChange={(loc, index) => {
             setChosenLoc(loc);
             updatePartitionsList(chosenGovt, chosenCt, loc);
-            setLocIndex(index-1);
+            setLocIndex(index - 1);
           }}
         >
           <Picker.Item label='Nothing selected' value={""} />
@@ -144,7 +150,7 @@ const Homepage = () => {
           onValueChange={(part, index) => {
             setChosenPart(part);
             updateSlotList(chosenGovt, chosenCt, chosenLoc, part);
-            setPartIndex(index-1);
+            setPartIndex(index - 1);
           }}
         >
           <Picker.Item label='Nothing selected' value={""} />
@@ -160,23 +166,23 @@ const Homepage = () => {
       <View>
         <Text>Choose parking slot:</Text>
         <Picker
-        selectedValue={chosenSlot}
-        onValueChange={(slot, index) => {
-          setChosenSlot(slot);
-          setSlotIndex(index-1);
-        }}
+          selectedValue={chosenSlot}
+          onValueChange={(slot, index) => {
+            setChosenSlot(slot);
+            setSlotIndex(index - 1);
+          }}
         >
           <Picker.Item label='Nothing selected' value={""} />
           {
             slots && slots.length ? slots.map((e, index) => {
-              if(e == false) {
+              if (e == false) {
                 return (
-                  <Picker.Item label={index} value={e} key={index}/>
+                  <Picker.Item label={index} value={e} key={index} />
                 )
               }
-              else{
+              else {
                 return (
-                  <Picker.Item label={index + " Occupied"} value={""} key={index}/>
+                  <Picker.Item label={index + " Occupied"} value={""} key={index} />
                 )
               }
             }) : null
@@ -187,10 +193,12 @@ const Homepage = () => {
       <Text>{chosenCt}</Text>
       <Text>{chosenLoc}</Text>
       <Text>{chosenPart}</Text>
-      <Button 
-      title='Submit'
-      onPress={() => 
-        sumbit()}
+      <Button
+        title='Submit'
+        onPress={() => {
+          sumbit();
+          addToHistory();
+        }}
       />
     </View>
   )
