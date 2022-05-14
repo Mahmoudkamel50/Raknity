@@ -4,9 +4,9 @@ import { getUserHistory } from '../dataBase/user'
 import * as WebBrowser from 'expo-web-browser';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const YourPlaces = () => {
+const YourPlaces = ({user}) => {
     useEffect(() => {
-        getUserHistory("QqimFkMPbBWHflSGFTjIji4xLEy2").then((data) => {
+        getUserHistory(user.uid).then((data) => {
             setHistory(data);
         })
     }, []);

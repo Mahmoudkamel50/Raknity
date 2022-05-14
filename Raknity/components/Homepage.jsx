@@ -1,10 +1,11 @@
-import { View, Text, Button } from 'react-native'
+import { View, Text, Button, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition } from '../dataBase/APIFunctions';
 import { Picker } from '@react-native-picker/picker';
 import { addToUserHistory } from '../dataBase/user';
+import Icon from "react-native-vector-icons/FontAwesome";
 
-const Homepage = () => {
+const Homepage = ({user}) => {
 
   useEffect(() => {
     getGovts().then((data) => {
@@ -62,7 +63,7 @@ const Homepage = () => {
   }
 
   function addToHistory() {
-    addToUserHistory("QqimFkMPbBWHflSGFTjIji4xLEy2", chosenGovt, chosenCt, chosenLoc, chosenPart, slotIndex, url);
+    addToUserHistory(user.uid, chosenGovt, chosenCt, chosenLoc, chosenPart, slotIndex, url);
   }
 
   const [govts, setGovts] = useState([]);
@@ -137,7 +138,7 @@ const Homepage = () => {
           {
             locations && locations.length ? locations.map((e, index) => {
               return (
-                <Picker.Item label={e.locationName} value={e.locatioName} key={index} />
+                <Picker.Item label={e.locationName} value={e.locationName} key={index} />
               )
             }) : null
           }
@@ -189,19 +190,29 @@ const Homepage = () => {
           }
         </Picker>
       </View>
-      <Text>{chosenGovt}</Text>
-      <Text>{chosenCt}</Text>
-      <Text>{chosenLoc}</Text>
-      <Text>{chosenPart}</Text>
-      <Button
-        title='Submit'
-        onPress={() => {
-          sumbit();
-          addToHistory();
-        }}
-      />
+      <View style={styles.BTview}>
+        <Icon.Button
+          name='plus'
+          onPress={() => {
+            sumbit();
+            addToHistory();
+          }}
+          backgroundColor={'#3ded97'}
+          borderRadius={40}
+        >
+          <Text>
+            Submit
+          </Text>
+        </Icon.Button>
+      </View>
     </View>
   )
 }
 
 export default Homepage
+
+const styles = StyleSheet.create({
+  BTview: {
+    alignItems: 'center',
+  }
+})

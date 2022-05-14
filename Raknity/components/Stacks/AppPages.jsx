@@ -7,14 +7,18 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 const Tabs = createBottomTabNavigator();
-const AppPages = () => {
+const AppPages = ({ user }) => {
   return (
     <NavigationContainer>
-        <Tabs.Navigator initialRouteName='Home'>
-            <Tabs.Screen name='Home' component={Homepage}/>
-            <Tabs.Screen name='Your Places' component={YourPlaces}/>
-            <Tabs.Screen name='Profile' component={Profile}/>
-        </Tabs.Navigator>
+      <Tabs.Navigator initialRouteName='Home'>
+        <Tabs.Screen name='Home'>
+          {(props) => <Homepage {...props} user={user}/>}
+        </Tabs.Screen>
+        <Tabs.Screen name='Your Places'>
+          {(props) => <YourPlaces {...props} user={user}/>}
+        </Tabs.Screen>
+        <Tabs.Screen name='Profile' component={Profile} />
+      </Tabs.Navigator>
     </NavigationContainer>
   )
 }
