@@ -77,12 +77,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingBottom: 30,
-    width: "70%",
+    width: "97%",
   },
   textInput: {
     flex: 1,
     backgroundColor: "#d3d3d3",
     borderRadius: 40,
+    padding: 5,
   },
   BTView: {
     alignItems: "center",

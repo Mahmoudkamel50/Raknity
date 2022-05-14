@@ -1,9 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import SignIn from "./components/SignIn";
 import AuthorizationStack from "./components/Stacks/AuthorizationStack";
-import Homepage from "./components/Homepage";
+import AppPages from "./components/Stacks/AppPages";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./dataBase/configuration";
 
@@ -30,7 +29,7 @@ export default function App() {
 
       if(user){
         return(
-        <Homepage/>
+         <AppPages/>
         );
       }
       else{
