@@ -42,7 +42,14 @@ async function login(email, password) {
 }
 
 async function logout() {
+    try{
     authentication.signOut().then().catch((e) => console.log(e.message));
+    console.log("sign out");
+    }
+    catch(e){
+        console.error(e);
+    }
+
 }
 
 export {register, login, isSignedIn, getUserUId, logout, getUserToken};
