@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { getUserHistory } from '../dataBase/user'
 import * as WebBrowser from 'expo-web-browser';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { checkIn } from '../dataBase/APIFunctions';
 
 const YourPlaces = ({user}) => {
     useEffect(() => {
@@ -14,6 +15,8 @@ const YourPlaces = ({user}) => {
     function openLink(url) {
         WebBrowser.openBrowserAsync(url);
     }
+
+    
     const [history, setHistory] = useState([]);
     return (
         <View style={styles.container}>
@@ -28,7 +31,7 @@ const YourPlaces = ({user}) => {
                                 <View key={index} style={{alignItems: 'center'}}>
                                     <View>
                                         <Text style={styles.locations}>
-                                            {e.government}, {e.cityName}, {e.locationName}
+                                            {e.government}, {e.cityName}, {e.locationName}, {e.partitionName}
                                         </Text>
                                     </View>
                                     <View style={styles.btView}>
@@ -42,6 +45,21 @@ const YourPlaces = ({user}) => {
                                         >
                                             <Text>Navigate</Text>
                                         </Icon.Button>
+
+                                    </View>
+                                    <View style={styles.btView}>
+                                        <Icon.Button
+                                            name='send'
+                                            onPress={() => {
+                                                console.log(user.uid , index);
+                                                checkIn(user.uid , index);
+                                            }}
+                                            backgroundColor={'#3ded97'}
+                                            borderRadius={40}
+                                        >
+                                            <Text>Check In</Text>
+                                        </Icon.Button>
+                                        
                                     </View>
                                 </View>
                             )

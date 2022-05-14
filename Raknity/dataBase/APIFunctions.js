@@ -1,5 +1,6 @@
 import { db } from "./configuration";
 import { getDocs, doc, collection, updateDoc } from "firebase/firestore";
+import { getUserById } from "./user";
 
 async function getGovts() {
     const locCol = collection(db, "locations");
@@ -75,4 +76,16 @@ async function submition(id, citiesList, cityindex, locindex, partindex, slotind
     }
 }
 
-export { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition };
+async function checkIn(id, index) {
+    const user = await getUserById(id);
+    const history = user[0].history;
+
+    history[index].status = "Checked In";
+
+    const docRef = doc(db, "users", id);
+    await updateDoc(docRef, {
+        history: history
+    })
+}
+
+export { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition, checkIn };

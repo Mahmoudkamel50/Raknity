@@ -189,15 +189,15 @@ const Homepage = ({ user }) => {
         >
           <Picker.Item label='Nothing selected' value={""} />
           {
-            slots && slots.length ? slots.map((e, index) => {
+            slots && slots.length ? slots.map((e, key) => {
               if (e == false) {
                 return (
-                  <Picker.Item label={index} value={e} key={index} />
+                  <Picker.Item label={key} value={e} key={key} />
                 )
               }
               else {
                 return (
-                  <Picker.Item label={index + " Occupied"} value={""} key={index} />
+                  <Picker.Item label={key + " Occupied"} value={""} key={key} />
                 )
               }
             }) : null
