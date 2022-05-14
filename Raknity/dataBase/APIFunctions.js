@@ -65,7 +65,6 @@ async function getAllSlots(id, cityName, locationName, partitionName) {
 
 async function submition(id, citiesList, cityindex, locindex, partindex, slotindex) {
     try {
-
         citiesList[cityindex].locations[locindex].partitions[partindex].slots[slotindex] = true;
         const docRef = doc(db, "locations", id);
         await updateDoc(docRef, {
@@ -75,6 +74,5 @@ async function submition(id, citiesList, cityindex, locindex, partindex, slotind
         console.error(e);
     }
 }
-
 
 export { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition };
