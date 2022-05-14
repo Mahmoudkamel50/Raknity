@@ -29,13 +29,14 @@ export default function SignUp({ navigation }) {
           console.log(getUserUId());
 
           getUserUId().then((id) => {
+            // console.log(id);
             addUser({
               id: id,
-              email: email,
-              firstName: firstName,
-              lastName: lastName,
-              phoneNumber: phoneNumber,
-              history: history,
+              email,
+              firstName,
+              lastName,
+              phoneNumber,
+              history,
             });
           });
           navigation.navigate("Sign in");
