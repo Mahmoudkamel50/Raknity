@@ -3,9 +3,34 @@ import React, { useEffect, useState } from 'react'
 import { getUserHistory } from '../dataBase/user'
 import * as WebBrowser from 'expo-web-browser';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { checkIn } from '../dataBase/APIFunctions';
+import { checkIn, subscribe } from '../dataBase/APIFunctions';
 
-const YourPlaces = ({user}) => {
+const YourPlaces = ({ user }) => {
+
+    useEffect(() => {
+        const unsubscribe = subscribe(({ change, snapshot }) => {
+            if (change.type === "added") {
+                getUserHistory(user.uid).then((data) => {
+                    setHistory(data);
+                });
+            }
+            if (change.type === "modified") {
+                getUserHistory(user.uid).then((data) => {
+                    setHistory(data);
+                });
+            }
+            if (change.type === "removed") {
+                getUserHistory(user.uid).then((data) => {
+                    setHistory(data);
+                });
+            }
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+
     useEffect(() => {
         getUserHistory(user.uid).then((data) => {
             setHistory(data);
@@ -16,7 +41,7 @@ const YourPlaces = ({user}) => {
         WebBrowser.openBrowserAsync(url);
     }
 
-    
+
     const [history, setHistory] = useState([]);
     return (
         <View style={styles.container}>
@@ -28,38 +53,59 @@ const YourPlaces = ({user}) => {
                     history.map((e, index) => {
                         if (e.status == "pending") {
                             return (
-                                <View key={index} style={{alignItems: 'center'}}>
+                                <View key={index} style={{ alignItems: 'center' }}>
                                     <View>
                                         <Text style={styles.locations}>
                                             {e.government}, {e.cityName}, {e.locationName}, {e.partitionName}
                                         </Text>
                                     </View>
-                                    <View style={styles.btView}>
-                                        <Icon.Button
-                                            name='send'
-                                            onPress={() => {
-                                                openLink(e.url);
-                                            }}
-                                            backgroundColor={'#3ded97'}
-                                            borderRadius={40}
-                                        >
-                                            <Text>Navigate</Text>
-                                        </Icon.Button>
+                                    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                                        <View style={styles.btView}>
+                                            <Icon.Button
+                                                name='send'
+                                                onPress={() => {
+                                                    openLink(e.url);
+                                                }}
+                                                backgroundColor={'#3ded97'}
+                                                borderRadius={40}
+                                            >
+                                                <Text>Navigate</Text>
+                                            </Icon.Button>
 
+                                        </View>
+                                        <View style={styles.btView}>
+                                            <Icon.Button
+                                                name='check'
+                                                onPress={() => {
+                                                    console.log(user.uid, index);
+                                                    checkIn(user.uid, index);
+                                                }}
+                                                backgroundColor={'#3ded97'}
+                                                borderRadius={40}
+                                            >
+                                                <Text>Check In</Text>
+                                            </Icon.Button>
+                                        </View>
                                     </View>
-                                    <View style={styles.btView}>
-                                        <Icon.Button
-                                            name='send'
-                                            onPress={() => {
-                                                console.log(user.uid , index);
-                                                checkIn(user.uid , index);
-                                            }}
-                                            backgroundColor={'#3ded97'}
-                                            borderRadius={40}
-                                        >
-                                            <Text>Check In</Text>
-                                        </Icon.Button>
-                                        
+                                </View>
+                            )
+                        }
+                    })
+                }
+            </ScrollView>
+            <Text style={styles.titles}>
+                Checked in bookings:
+            </Text>
+            <ScrollView>
+                {
+                    history.map((e, index) => {
+                        if (e.status == "Checked In") {
+                            return (
+                                <View key={index} style={{ alignItems: 'center' }}>
+                                    <View>
+                                        <Text style={styles.locations}>
+                                            {e.government}, {e.cityName}, {e.locationName}, {e.partitionName}
+                                        </Text>
                                     </View>
                                 </View>
                             )
@@ -77,7 +123,7 @@ const YourPlaces = ({user}) => {
                             return (
                                 <View key={index}>
                                     <Text style={styles.locations}>
-                                        {e.government}, {e.cityName}, {e.locationName}
+                                        {e.government}, {e.cityName}, {e.locationName}, {e.partitionName}
                                     </Text>
                                 </View>
                             )
@@ -109,6 +155,7 @@ const styles = StyleSheet.create({
         borderColor: '#d3d3d3',
     },
     btView: {
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingHorizontal: 5,
     }
 })

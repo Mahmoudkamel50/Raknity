@@ -1,5 +1,5 @@
 import { db } from "./configuration";
-import { getDocs, doc, collection, updateDoc } from "firebase/firestore";
+import { getDocs, doc, collection, updateDoc, onSnapshot, query } from "firebase/firestore";
 import { getUserById } from "./user";
 
 async function getGovts() {
@@ -88,4 +88,17 @@ async function checkIn(id, index) {
     })
 }
 
-export { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition, checkIn };
+function subscribe(callback) {
+    const unsubscribe = onSnapshot(
+        query(collection(db, "users")),
+        (snapshot) => {
+            const source = snapshot.metadata.hasPendingWrites ? "Local" : "Server";
+            snapshot.docChanges().forEach((change) => {
+                if (callback) callback({ change, snapshot });
+            });
+        }
+    );
+    return unsubscribe;
+}
+
+export { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition, checkIn, subscribe };
