@@ -29,7 +29,7 @@ export default function App() {
 
       if(user){
         return(
-         <AppPages/>
+         <AppPages user={user}/>
         );
       }
       else{
