@@ -52,10 +52,13 @@ const Homepage = ({ user }) => {
 
   function updateSlotList(id, ctName, locName, partName) {
     if (partName != "") {
+      console.log("here in update slot list method");
       getAllSlots(id, ctName, locName, partName).then((data) => {
         setSlots(data.slots);
+        console.log(data.slots);
         data.slots.map((e) => {
           console.log(e);
+
         })
       });
     }
@@ -227,7 +230,7 @@ export default Homepage
 const styles = StyleSheet.create({
   BTview: {
     alignItems: 'center',
-    paddingTop: '50%',
+    paddingTop: 10,
   },
   pck: {
     paddingVertical: 5,
