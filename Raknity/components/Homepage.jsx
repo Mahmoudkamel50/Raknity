@@ -95,7 +95,7 @@ const Homepage = ({ user }) => {
       <Text style={styles.welcome}>Hi, {firstName}</Text>
       <Text style={{ fontSize: 20, paddingBottom: 5 }}>Start your booking</Text>
       <View style={styles.pckView}>
-        <Text style={styles.textStyle}>Choose a goverment:</Text>
+        <Text style={styles.textStyle}>Choose a government:</Text>
         <Picker
           selectedValue={chosenGovt}
           onValueChange={(govt, index) => {
