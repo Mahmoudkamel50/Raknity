@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/Final-Raknity-logo.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.myapp.raknity"
     },
     "web": {
       "favicon": "./assets/Final-Raknity-logo.png"
