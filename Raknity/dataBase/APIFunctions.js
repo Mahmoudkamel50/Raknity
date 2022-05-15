@@ -101,4 +101,37 @@ function subscribe(callback) {
     return unsubscribe;
 }
 
-export { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition, checkIn, subscribe };
+async function checkout(id, histindex, govt, cityname, locname, partname, slotindex) {
+    try {
+        const user = await getUserById(id);
+        const history = user[0].history;
+        history[histindex].status = "Checked out";
+        const docRef = doc(db, "users", id);
+        await updateDoc(docRef, {
+            history: history
+        })
+        const gov = await getGovCities(govt);
+        for (let i = 0; i < gov.cities.length; i++) {
+            if (gov.cities[i].cityName == cityname) {
+                for (let j = 0; j < gov.cities[i].locations.length; j++) {
+                    if (gov.cities[i].locations[j].locationName == locname) {
+                        for (let k = 0; k < gov.cities[i].locations[j].partitions.length; k++) {
+                            if (gov.cities[i].locations[j].partitions[k].partitionName == partname) {
+                                gov.cities[i].locations[j].partitions[k].slots[slotindex] = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        const locRef = doc(db, "locations", govt);
+        await updateDoc(locRef, {
+            cities: gov.cities
+        })
+    }
+    catch (e) {
+        console.error(e);
+    }
+}
+
+export { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition, checkIn, subscribe, checkout };

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { getUserHistory } from '../dataBase/user'
 import * as WebBrowser from 'expo-web-browser';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { checkIn, subscribe } from '../dataBase/APIFunctions';
+import { checkIn, subscribe , checkout } from '../dataBase/APIFunctions';
 
 const YourPlaces = ({ user }) => {
 
@@ -107,19 +107,35 @@ const YourPlaces = ({ user }) => {
                                             {e.government}, {e.cityName}, {e.locationName}, {e.partitionName}
                                         </Text>
                                     </View>
+                                    <View style={styles.btView}>
+                                            <Icon.Button
+                                                name='remove'
+                                                onPress={() => {
+                                                    checkout(user.uid , index , e.government , e.cityName , e.locationName , e.partitionName , e.slot)
+
+                                                }}
+                                                backgroundColor={'#3ded97'}
+                                                borderRadius={40}
+                                            >
+                                                <Text>Check Out</Text>
+                                            </Icon.Button>
+                                        </View>
                                 </View>
+
                             )
+
                         }
                     })
                 }
             </ScrollView>
+            
             <Text style={styles.titles}>
                 Your previous bookings:
             </Text>
-            <ScrollView style={styles.sv}>
+            <ScrollView>
                 {
                     history.map((e, index) => {
-                        if (e.status != "pending") {
+                        if (e.status == "Checked out") {
                             return (
                                 <View key={index}>
                                     <Text style={styles.locations}>
@@ -149,11 +165,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         padding: 10,
     },
-    sv: {
-        borderRadius: 30,
-        borderWidth: 1,
-        borderColor: '#d3d3d3',
-    },
+
     btView: {
         alignItems: 'center',
         paddingHorizontal: 5,
