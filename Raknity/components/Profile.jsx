@@ -24,6 +24,7 @@ export default function Profile({ navigation }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [wallet, setWallet] = useState("");
 
   useEffect(() => {
     getUserUId().then((id) => {
@@ -33,6 +34,7 @@ export default function Profile({ navigation }) {
         setPhoneNumber(user[0].phoneNumber);
         setFirstName(user[0].firstName);
         setLastName(user[0].lastName);
+        setWallet(user[0].wallet);
       });
     });
   }, []);
@@ -53,6 +55,11 @@ export default function Profile({ navigation }) {
       <View style={{ padding: 10 }}>
         <Text style={styles.title}>E-mail:</Text>
         <Text style={styles.info}>{email}</Text>
+      </View>
+
+      <View style={{ padding: 10 }}>
+        <Text style={styles.title}>Wallet:</Text>
+        <Text style={styles.info}>{wallet} EGP</Text>
       </View>
 
       <View style={{ padding: 10 }}>
