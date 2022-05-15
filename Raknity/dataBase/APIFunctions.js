@@ -134,4 +134,21 @@ async function checkout(id, histindex, govt, cityname, locname, partname, slotin
     }
 }
 
-export { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition, checkIn, subscribe, checkout };
+async function deductFromWallet(id, timeDiff, wallet) {
+    try {
+        console.log(timeDiff);
+        const timeDiffMin = timeDiff / 60;
+        const timeDiffHrs = timeDiffMin / 60;
+        const EGP_PER_HOUR = 7;
+        const finalPrice = EGP_PER_HOUR * timeDiffHrs;
+        wallet = wallet - finalPrice;
+        const docRef = doc(db, "users", id);
+        await updateDoc(docRef, {
+            wallet: wallet
+        })
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition, checkIn, subscribe, checkout, deductFromWallet }; 

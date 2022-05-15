@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { getUserHistory } from '../dataBase/user'
 import * as WebBrowser from 'expo-web-browser';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { checkIn, subscribe , checkout } from '../dataBase/APIFunctions';
+import { checkIn, subscribe , checkout, deductFromWallet } from '../dataBase/APIFunctions';
 
 const YourPlaces = ({ user }) => {
 
@@ -51,6 +51,7 @@ const YourPlaces = ({ user }) => {
             <ScrollView>
                 {
                     history.map((e, index) => {
+                        console.log(e.bookingTime)
                         if (e.status == "pending") {
                             return (
                                 <View key={index} style={{ alignItems: 'center' }}>
@@ -111,8 +112,9 @@ const YourPlaces = ({ user }) => {
                                             <Icon.Button
                                                 name='remove'
                                                 onPress={() => {
-                                                    checkout(user.uid , index , e.government , e.cityName , e.locationName , e.partitionName , e.slot)
-
+                                                    checkout(user.uid , index , e.government , e.cityName , e.locationName , e.partitionName , e.slot);
+                                                    const timeDiff = e.bookingTime.seconds - new Date().getSeconds();
+                                                    deductFromWallet(user.uid, timeDiff, e.wallet);
                                                 }}
                                                 backgroundColor={'#3ded97'}
                                                 borderRadius={40}
