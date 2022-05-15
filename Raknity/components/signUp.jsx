@@ -7,10 +7,10 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { register, getUserUId } from "../dataBase/authorization";
-import { addUser, getUserById } from "../dataBase/user";
-import SignIn from "./SignIn";
+import { addUser } from "../dataBase/user";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
@@ -29,7 +29,6 @@ export default function SignUp({ navigation }) {
           console.log(getUserUId());
 
           getUserUId().then((id) => {
-            // console.log(id);
             addUser({
               id: id,
               email,
@@ -37,6 +36,7 @@ export default function SignUp({ navigation }) {
               lastName,
               phoneNumber,
               history,
+              wallet: 50,
             });
           });
           navigation.navigate("Sign in");
@@ -108,11 +108,16 @@ export default function SignUp({ navigation }) {
             style={styles.textInputs}
           />
         </View>
-
         <View style={styles.buttonview}>
-          <Button title={"Create Account"} onPress={registerUser} color="#3ded97"/>
+          <Icon.Button
+          name="user-plus"
+          onPress={registerUser}
+          backgroundColor={'#3ded97'}
+          borderRadius={40}
+          >
+            <Text>Create account</Text>
+          </Icon.Button>
         </View>
-
         <StatusBar style="auto" />
         </ScrollView>
     </View>
