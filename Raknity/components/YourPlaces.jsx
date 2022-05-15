@@ -185,14 +185,18 @@ export default YourPlaces;
 const styles = StyleSheet.create({
   container: {
     padding: 30,
+    backgroundColor: '#151e3d',
+    flex: 1,
   },
   titles: {
     fontSize: 20,
     padding: 5,
+    color: '#fff'
   },
   locations: {
     fontSize: 16,
     padding: 10,
+    color: '#fff'
   },
 
   btView: {

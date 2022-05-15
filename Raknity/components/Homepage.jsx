@@ -15,8 +15,10 @@ import {
   getUserById,
 } from "../dataBase/user";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { StatusBar } from 'expo-status-bar';
 
 const Homepage = ({ user, navigation }) => {
+
   useEffect(() => {
     getGovts().then((data) => {
       setGovts(data);
@@ -107,11 +109,12 @@ const Homepage = ({ user, navigation }) => {
   const [url, setUrl] = useState("");
   
   return (
-    <View style={{ flexDirection: "column", padding: 30 }}>
+    <View style={{ flex: 1, padding: 30, backgroundColor: '#151e3d' }}>
+
       <Text style={styles.welcome}>Hi, {firstName}</Text>
-      <Text style={{ fontSize: 20, paddingBottom: 5 }}>Start your booking</Text>
+      <Text style={{ fontSize: 20, paddingBottom: 5, color: '#fff' }}>Start your booking</Text>
       <View style={styles.pckView}>
-        <Text style={styles.textStyle}>Choose a goverment:</Text>
+        <Text style={styles.textStyle}>Choose a government:</Text>
         <Picker
           selectedValue={chosenGovt}
           onValueChange={(govt, index) => {
@@ -119,6 +122,7 @@ const Homepage = ({ user, navigation }) => {
             updateCitiesList(govt);
           }}
           style={styles.pck}
+          mode='dropdown'
         >
           <Picker.Item label="Nothing selected" value={""} />
           {govts.map((e, index) => {
@@ -136,6 +140,7 @@ const Homepage = ({ user, navigation }) => {
             setCitiesIndex(index - 1);
           }}
           style={styles.pck}
+          mode='dropdown'
         >
           <Picker.Item label="Nothing selected" value={""} />
           {cities && cities.length
@@ -161,6 +166,7 @@ const Homepage = ({ user, navigation }) => {
             setLocIndex(index - 1);
           }}
           style={styles.pck}
+          mode='dropdown'
         >
           <Picker.Item label="Nothing selected" value={""} />
           {locations && locations.length
@@ -186,6 +192,7 @@ const Homepage = ({ user, navigation }) => {
             setPartIndex(index - 1);
           }}
           style={styles.pck}
+          mode='dropdown'
         >
           <Picker.Item label="Nothing selected" value={""} />
           {partitions && partitions.length
@@ -210,6 +217,7 @@ const Homepage = ({ user, navigation }) => {
             setSlotIndex(index - 1);
           }}
           style={styles.pck}
+          mode='dropdown'
         >
           <Picker.Item label="Nothing selected" value={""} />
           {slots.length != 0 &&
@@ -244,6 +252,7 @@ const Homepage = ({ user, navigation }) => {
           </Icon.Button>
         </View>
       </View>
+      <StatusBar style="light"/>
     </View>
   );
 };
@@ -263,6 +272,7 @@ const styles = StyleSheet.create({
   textStyle: {
     fontSize: 16,
     paddingVertical: 5,
+    color: '#fff'
   },
   pckView: {
     paddingBottom: 10,
@@ -271,5 +281,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     paddingBottom: 10,
-  },
-});
+    color: '#fff'
+  }
+})

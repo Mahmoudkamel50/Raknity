@@ -118,8 +118,8 @@ export default function SignUp({ navigation }) {
             <Text>Create account</Text>
           </Icon.Button>
         </View>
-        <StatusBar style="auto" />
-      </ScrollView>
+        <StatusBar style="inverted" />
+        </ScrollView>
     </View>
   );
 }
@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     padding: 30,
     flex: 1,
+    backgroundColor: '#151e3d',
   },
   inputs: {
     flexDirection: "row",
@@ -139,6 +140,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     paddingRight: 10,
+    color: '#fff'
   },
   textInputs: {
     flex: 1,

@@ -8,7 +8,7 @@
     "splash": {
       "image": "./assets/Raknitysplash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#151e3d"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -22,7 +22,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/Final-Raknity-logo.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#151e3d"
       },
       "package": "com.myapp.raknity"
     },
