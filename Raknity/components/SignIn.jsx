@@ -5,6 +5,7 @@ import { AuthContext } from "../dataBase/Utils";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { login } from "../dataBase/authorization";
+import { StatusBar } from "expo-status-bar";
 
 const SignIn = ({navigation}) => {
   const [email, setEmail] = useState("");
@@ -14,7 +15,7 @@ const SignIn = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.input}>
-        <Text style={{ fontSize: 17 }}>E-mail: </Text>
+        <Text style={{ fontSize: 17, color: '#fff', padding: 5 }}>E-mail: </Text>
         <View style={styles.textInput}>
           <TextInput
             placeholder="Enter your email"
@@ -27,7 +28,7 @@ const SignIn = ({navigation}) => {
         </View>
       </View>
       <View style={styles.input}>
-        <Text style={{ fontSize: 17 }}>Password: </Text>
+        <Text style={{ fontSize: 17, color: '#fff', padding: 5 }}>Password: </Text>
         <View style={styles.textInput}>
           <TextInput
             placeholder="Enter your password"
@@ -60,6 +61,7 @@ const SignIn = ({navigation}) => {
       >
         Don't have an account?
       </Text>
+      <StatusBar style="inverted"/>
     </View>
   );
 };
@@ -72,6 +74,7 @@ const styles = StyleSheet.create({
     padding: 30,
     alignItems: "center",
     flexDirection: "column",
+    backgroundColor: '#151e3d'
   },
   input: {
     flexDirection: "row",

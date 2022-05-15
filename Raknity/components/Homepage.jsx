@@ -4,8 +4,9 @@ import { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots
 import { Picker } from '@react-native-picker/picker';
 import { addToUserHistory, checkPendingHistory, getUserById } from '../dataBase/user';
 import Icon from "react-native-vector-icons/FontAwesome";
+import { StatusBar } from 'expo-status-bar';
 
-const Homepage = ({ user }) => {
+const Homepage = ({ user, navigation }) => {
 
   useEffect(() => {
     getGovts().then((data) => {
@@ -91,9 +92,9 @@ const Homepage = ({ user }) => {
 
 
   return (
-    <View style={{ flexDirection: 'column', padding: 30 }}>
+    <View style={{ flex: 1, padding: 30, backgroundColor: '#151e3d' }}>
       <Text style={styles.welcome}>Hi, {firstName}</Text>
-      <Text style={{ fontSize: 20, paddingBottom: 5 }}>Start your booking</Text>
+      <Text style={{ fontSize: 20, paddingBottom: 5, color: '#fff' }}>Start your booking</Text>
       <View style={styles.pckView}>
         <Text style={styles.textStyle}>Choose a government:</Text>
         <Picker
@@ -103,6 +104,7 @@ const Homepage = ({ user }) => {
             updateCitiesList(govt);
           }}
           style={styles.pck}
+          mode='dropdown'
         >
           <Picker.Item label='Nothing selected' value={""} />
           {
@@ -124,6 +126,7 @@ const Homepage = ({ user }) => {
             setCitiesIndex(index - 1);
           }}
           style={styles.pck}
+          mode='dropdown'
         >
           <Picker.Item label='Nothing selected' value={""} />
           {
@@ -145,6 +148,7 @@ const Homepage = ({ user }) => {
             setLocIndex(index - 1);
           }}
           style={styles.pck}
+          mode='dropdown'
         >
           <Picker.Item label='Nothing selected' value={""} />
           {
@@ -166,6 +170,7 @@ const Homepage = ({ user }) => {
             setPartIndex(index - 1);
           }}
           style={styles.pck}
+          mode='dropdown'
         >
           <Picker.Item label='Nothing selected' value={""} />
           {
@@ -186,22 +191,17 @@ const Homepage = ({ user }) => {
             setSlotIndex(index - 1);
           }}
           style={styles.pck}
+          mode='dropdown'
         >
-          <Picker.Item label='Nothing selected' value={""} />
-          {
-            slots && slots.length ? slots.map((e, key) => {
+          <Picker.Item label="Nothing selected" value={""} />
+          {slots.length != 0 &&
+            slots.map((e, idx) => {
               if (e == false) {
-                return (
-                  <Picker.Item label={key} value={e} key={key} />
-                )
+                return <Picker.Item label={`${idx}`} value={idx} key={idx} />;
+              } else {
+                return <Picker.Item label={`${idx} occupied`} value={""} key={idx} />;
               }
-              else {
-                return (
-                  <Picker.Item label={key + " Occupied"} value={""} key={key} />
-                )
-              }
-            }) : null
-          }
+            })}
         </Picker>
       </View>
       <View >
@@ -209,11 +209,14 @@ const Homepage = ({ user }) => {
           <Icon.Button
             name='plus'
             onPress={async () => {
-              if ( await checkPendingHistory(user.uid)) {
-                alert("You have pending bookings or you haven't checked out. Check 'Your Places' page");
+              if (await checkPendingHistory(user.uid)) {
+                alert(
+                  "You have pending bookings or you haven't checked out. Check 'Your Places' page"
+                );
               } else {
                 sumbit();
                 addToHistory();
+                navigation.navigate('Your Places');
               }
             }}
             backgroundColor={'#3ded97'}
@@ -225,6 +228,7 @@ const Homepage = ({ user }) => {
           </Icon.Button>
         </View>
       </View>
+      <StatusBar style="light"/>
     </View>
   )
 }
@@ -244,6 +248,7 @@ const styles = StyleSheet.create({
   textStyle: {
     fontSize: 16,
     paddingVertical: 5,
+    color: '#fff'
   },
   pckView: {
     paddingBottom: 10,
@@ -252,5 +257,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     paddingBottom: 10,
+    color: '#fff'
   }
 })

@@ -4,11 +4,11 @@
     "slug": "Raknity",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/Final-Raknity-logo.png",
     "splash": {
       "image": "./assets/Raknitysplash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#151e3d"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,12 +21,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/Final-Raknity-logo.png",
+        "backgroundColor": "#151e3d"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/Final-Raknity-logo.png"
     }
   }
 }

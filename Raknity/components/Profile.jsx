@@ -40,57 +40,64 @@ export default function Profile({ navigation }) {
   }, []);
 
   return (
-    <View>
-    <ScrollView style={{ padding: 30 }}>
-      <View style={{ padding: 10 }}>
-        <Text style={styles.title}>First Name:</Text>
-        <Text style={styles.info}>{firstName}</Text>
-      </View>
+    <View style={styles.container}>
+      <ScrollView style={{ padding: 30 }}>
+        <View style={{ padding: 10 }}>
+          <Text style={styles.title}>First Name:</Text>
+          <Text style={styles.info}>{firstName}</Text>
+        </View>
 
-      <View style={{ padding: 10 }}>
-        <Text style={styles.title}>Last Name:</Text>
-        <Text style={styles.info}>{lastName}</Text>
-      </View>
+        <View style={{ padding: 10 }}>
+          <Text style={styles.title}>Last Name:</Text>
+          <Text style={styles.info}>{lastName}</Text>
+        </View>
 
-      <View style={{ padding: 10 }}>
-        <Text style={styles.title}>E-mail:</Text>
-        <Text style={styles.info}>{email}</Text>
-      </View>
+        <View style={{ padding: 10 }}>
+          <Text style={styles.title}>E-mail:</Text>
+          <Text style={styles.info}>{email}</Text>
+        </View>
 
-      <View style={{ padding: 10 }}>
-        <Text style={styles.title}>Wallet:</Text>
-        <Text style={styles.info}>{wallet} EGP</Text>
-      </View>
+        <View style={{ padding: 10 }}>
+          <Text style={styles.title}>Wallet:</Text>
+          <Text style={styles.info}>{wallet} EGP</Text>
+        </View>
 
-      <View style={{ padding: 10 }}>
-        <Text style={styles.title}>Phone Number:</Text>
-        <Text style={styles.info}>{phoneNumber}</Text>
-      </View>
+        <View style={{ padding: 10 }}>
+          <Text style={styles.title}>Phone Number:</Text>
+          <Text style={styles.info}>{phoneNumber}</Text>
+        </View>
 
-      <StatusBar style="auto" />
-    </ScrollView>
-    <View style={{alignItems:"center"}}>
-      <Icon.Button
-        name="sign-out"
-        onPress={() => {logout()}}
-        backgroundColor={'#3ded97'}
-        borderRadius={40}
+        <StatusBar style="auto" />
+      </ScrollView>
+      <View style={{ alignItems: "center", marginBottom: 70 }}>
+        <Icon.Button
+          name="sign-out"
+          onPress={() => { logout() }}
+          backgroundColor={'#3ded97'}
+          borderRadius={40}
         >
-        <Text>Log out</Text>
-      </Icon.Button>
-    </View>
+          <Text>Log out</Text>
+        </Icon.Button>
+      </View>
+      <StatusBar style="light"/>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#151e3d',
+    flex: 1,
+  },
   title: {
     fontSize: 20,
     fontWeight: "bold",
     padding: 5,
+    color: '#fff',
   },
-  info:{
+  info: {
     fontSize: 16,
     padding: 10,
+    color: '#fff',
   }
 });

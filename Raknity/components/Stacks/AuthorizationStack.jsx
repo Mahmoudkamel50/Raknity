@@ -17,8 +17,9 @@ const AuthorizationStack = () => {
           component={SignIn}
           options={{
             headerStyle: {
-              backgroundColor: '#3ded97'
-            }
+              backgroundColor: '#151e3d'
+            },
+            headerTintColor: '#3ded97',
           }}
         />
         <AuthStack.Screen
@@ -26,8 +27,9 @@ const AuthorizationStack = () => {
           component={SignUp}
           options={{
             headerStyle: {
-              backgroundColor: '#3ded97'
-            }
+              backgroundColor: '#151e3d'
+            },
+            headerTintColor: '#3ded97',
           }}
         />
       </AuthStack.Navigator>

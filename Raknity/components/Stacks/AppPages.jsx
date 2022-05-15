@@ -24,17 +24,18 @@ const AppPages = ({ user }) => {
             }
             return <Icon name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: '#fff',
-          tabBarInactiveTintColor: '#c7ffc7',
-          tabBarStyle: { backgroundColor: '#3ded97' }
+          tabBarActiveTintColor: '#c7ffc7',
+          tabBarInactiveTintColor: '#fff',
+          tabBarStyle: { backgroundColor: '#151e3d' }
         })}
       >
         <Tabs.Screen
           name='Home'
           options={{
             headerStyle: {
-              backgroundColor: '#3ded97'
-            }
+              backgroundColor: '#151e3d'
+            },
+            headerTintColor: '#3ded97',
           }}
         >
           {(props) => <Homepage {...props} user={user} />}
@@ -43,8 +44,9 @@ const AppPages = ({ user }) => {
           name='Your Places'
           options={{
             headerStyle: {
-              backgroundColor: '#3ded97'
-            }
+              backgroundColor: '#151e3d'
+            },
+            headerTintColor: '#3ded97',
           }}
         >
           {(props) => <YourPlaces {...props} user={user} />}
@@ -54,8 +56,9 @@ const AppPages = ({ user }) => {
           component={Profile}
           options={{
             headerStyle: {
-              backgroundColor: '#3ded97'
-            }
+              backgroundColor: '#151e3d'
+            },
+            headerTintColor: '#3ded97',
           }}
         />
       </Tabs.Navigator>
