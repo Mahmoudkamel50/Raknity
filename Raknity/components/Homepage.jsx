@@ -214,7 +214,11 @@ const Homepage = ({ user, navigation }) => {
           <Picker.Item label="Nothing selected" value={""} />
           {slots.length != 0 &&
             slots.map((e, idx) => {
-              return <Picker.Item label={`${idx}`} value={idx} key={idx} />;
+              if (e == false) {
+                return <Picker.Item label={`${idx}`} value={idx} key={idx} />;
+              } else {
+                return <Picker.Item label={`${idx} occupied`} value={""} key={idx} />;
+              }
             })}
         </Picker>
       </View>
