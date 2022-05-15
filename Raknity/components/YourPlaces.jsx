@@ -96,7 +96,7 @@ const YourPlaces = ({ user }) => {
 
                   <View style={styles.btView}>
                     <Icon.Button
-                      name="send"
+                      name="remove"
                       onPress={() => {
                         cancel(
                           user.uid,
@@ -134,7 +134,7 @@ const YourPlaces = ({ user }) => {
                 </View>
                 <View style={styles.btView}>
                   <Icon.Button
-                    name="remove"
+                    name="sign-out"
                     onPress={() => {
                       checkout(
                         user.uid,
@@ -197,6 +197,6 @@ const styles = StyleSheet.create({
 
   btView: {
     alignItems: "center",
-    paddingHorizontal: 5,
+    paddingHorizontal: 3,
   },
 });
