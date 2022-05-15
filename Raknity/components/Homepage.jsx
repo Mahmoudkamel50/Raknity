@@ -1,8 +1,19 @@
-import { View, Text, Button, StyleSheet } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition } from '../dataBase/APIFunctions';
-import { Picker } from '@react-native-picker/picker';
-import { addToUserHistory, checkPendingHistory, getUserById } from '../dataBase/user';
+import { View, Text, Button, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  getGovts,
+  getGovCities,
+  getCityLocations,
+  getlocpartitions,
+  getAllSlots,
+  submition,
+} from "../dataBase/APIFunctions";
+import { Picker } from "@react-native-picker/picker";
+import {
+  addToUserHistory,
+  checkPendingHistory,
+  getUserById,
+} from "../dataBase/user";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { StatusBar } from 'expo-status-bar';
 
@@ -23,7 +34,7 @@ const Homepage = ({ user, navigation }) => {
         setCities(data.cities);
         data.cities.map((e) => {
           console.log(e.cityName);
-        })
+        });
       });
     }
   }
@@ -33,9 +44,9 @@ const Homepage = ({ user, navigation }) => {
       getCityLocations(id, loc).then((data) => {
         setLocations(data.locations);
         data.locations.map((e) => {
-          console.log(e.locationName)
-        })
-      })
+          console.log(e.locationName);
+        });
+      });
     }
   }
 
@@ -45,9 +56,9 @@ const Homepage = ({ user, navigation }) => {
         setPartitions(data.partitions);
         setUrl(data.url);
         data.partitions.map((e) => {
-          console.log(e.partitionName)
-        })
-      })
+          console.log(e.partitionName);
+        });
+      });
     }
   }
 
@@ -59,8 +70,7 @@ const Homepage = ({ user, navigation }) => {
         console.log(data.slots);
         data.slots.map((e) => {
           console.log(e);
-
-        })
+        });
       });
     }
   }
@@ -70,7 +80,15 @@ const Homepage = ({ user, navigation }) => {
   }
 
   function addToHistory() {
-    addToUserHistory(user.uid, chosenGovt, chosenCt, chosenLoc, chosenPart, slotIndex, url);
+    addToUserHistory(
+      user.uid,
+      chosenGovt,
+      chosenCt,
+      chosenLoc,
+      chosenPart,
+      slotIndex,
+      url
+    );
   }
 
   const [firstName, setFirstName] = useState("");
@@ -89,10 +107,10 @@ const Homepage = ({ user, navigation }) => {
   const [locIndex, setLocIndex] = useState("");
   const [partIndex, setPartIndex] = useState("");
   const [url, setUrl] = useState("");
-
-
+  
   return (
     <View style={{ flex: 1, padding: 30, backgroundColor: '#151e3d' }}>
+
       <Text style={styles.welcome}>Hi, {firstName}</Text>
       <Text style={{ fontSize: 20, paddingBottom: 5, color: '#fff' }}>Start your booking</Text>
       <View style={styles.pckView}>
@@ -106,14 +124,10 @@ const Homepage = ({ user, navigation }) => {
           style={styles.pck}
           mode='dropdown'
         >
-          <Picker.Item label='Nothing selected' value={""} />
-          {
-            govts.map((e, index) => {
-              return (
-                <Picker.Item label={e.id} value={e.id} key={index} />
-              );
-            })
-          }
+          <Picker.Item label="Nothing selected" value={""} />
+          {govts.map((e, index) => {
+            return <Picker.Item label={e.id} value={e.id} key={index} />;
+          })}
         </Picker>
       </View>
       <View style={styles.pckView}>
@@ -128,14 +142,18 @@ const Homepage = ({ user, navigation }) => {
           style={styles.pck}
           mode='dropdown'
         >
-          <Picker.Item label='Nothing selected' value={""} />
-          {
-            cities && cities.length ? cities.map((e, index) => {
-              return (
-                <Picker.Item label={e.cityName} value={e.cityName} key={index} />
-              )
-            }) : null
-          }
+          <Picker.Item label="Nothing selected" value={""} />
+          {cities && cities.length
+            ? cities.map((e, index) => {
+                return (
+                  <Picker.Item
+                    label={e.cityName}
+                    value={e.cityName}
+                    key={index}
+                  />
+                );
+              })
+            : null}
         </Picker>
       </View>
       <View style={styles.pckView}>
@@ -150,14 +168,18 @@ const Homepage = ({ user, navigation }) => {
           style={styles.pck}
           mode='dropdown'
         >
-          <Picker.Item label='Nothing selected' value={""} />
-          {
-            locations && locations.length ? locations.map((e, index) => {
-              return (
-                <Picker.Item label={e.locationName} value={e.locationName} key={index} />
-              )
-            }) : null
-          }
+          <Picker.Item label="Nothing selected" value={""} />
+          {locations && locations.length
+            ? locations.map((e, index) => {
+                return (
+                  <Picker.Item
+                    label={e.locationName}
+                    value={e.locationName}
+                    key={index}
+                  />
+                );
+              })
+            : null}
         </Picker>
       </View>
       <View style={styles.pckView}>
@@ -172,14 +194,18 @@ const Homepage = ({ user, navigation }) => {
           style={styles.pck}
           mode='dropdown'
         >
-          <Picker.Item label='Nothing selected' value={""} />
-          {
-            partitions && partitions.length ? partitions.map((e, index) => {
-              return (
-                <Picker.Item label={e.partitionName} value={e.partitionName} key={index} />
-              )
-            }) : null
-          }
+          <Picker.Item label="Nothing selected" value={""} />
+          {partitions && partitions.length
+            ? partitions.map((e, index) => {
+                return (
+                  <Picker.Item
+                    label={e.partitionName}
+                    value={e.partitionName}
+                    key={index}
+                  />
+                );
+              })
+            : null}
         </Picker>
       </View>
       <View style={styles.pckView}>
@@ -204,10 +230,10 @@ const Homepage = ({ user, navigation }) => {
             })}
         </Picker>
       </View>
-      <View >
+      <View>
         <View style={styles.BTview}>
           <Icon.Button
-            name='plus'
+            name="plus"
             onPress={async () => {
               if (await checkPendingHistory(user.uid)) {
                 alert(
@@ -219,31 +245,29 @@ const Homepage = ({ user, navigation }) => {
                 navigation.navigate('Your Places');
               }
             }}
-            backgroundColor={'#3ded97'}
+            backgroundColor={"#3ded97"}
             borderRadius={40}
           >
-            <Text>
-              Submit
-            </Text>
+            <Text>Submit</Text>
           </Icon.Button>
         </View>
       </View>
       <StatusBar style="light"/>
     </View>
-  )
-}
+  );
+};
 
-export default Homepage
+export default Homepage;
 
 const styles = StyleSheet.create({
   BTview: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: 10,
   },
   pck: {
     paddingVertical: 5,
     borderRadius: 40,
-    backgroundColor: '#c7ffc7'
+    backgroundColor: "#c7ffc7",
   },
   textStyle: {
     fontSize: 16,
@@ -255,7 +279,7 @@ const styles = StyleSheet.create({
   },
   welcome: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingBottom: 10,
     color: '#fff'
   }
