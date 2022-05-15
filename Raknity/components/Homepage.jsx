@@ -2,7 +2,7 @@ import { View, Text, Button, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition } from '../dataBase/APIFunctions';
 import { Picker } from '@react-native-picker/picker';
-import { addToUserHistory, getUserById } from '../dataBase/user';
+import { addToUserHistory, checkPendingHistory, getUserById } from '../dataBase/user';
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const Homepage = ({ user }) => {
@@ -93,7 +93,7 @@ const Homepage = ({ user }) => {
   return (
     <View style={{ flexDirection: 'column', padding: 30 }}>
       <Text style={styles.welcome}>Hi, {firstName}</Text>
-      <Text style={{fontSize: 20, paddingBottom: 5}}>Start your booking</Text>
+      <Text style={{ fontSize: 20, paddingBottom: 5 }}>Start your booking</Text>
       <View style={styles.pckView}>
         <Text style={styles.textStyle}>Choose a goverment:</Text>
         <Picker
@@ -208,9 +208,13 @@ const Homepage = ({ user }) => {
         <View style={styles.BTview}>
           <Icon.Button
             name='plus'
-            onPress={() => {
-              sumbit();
-              addToHistory();
+            onPress={async () => {
+              if ( await checkPendingHistory(user.uid)) {
+                alert("You have pending bookings or you haven't checked out. Check 'Your Places' page");
+              } else {
+                sumbit();
+                addToHistory();
+              }
             }}
             backgroundColor={'#3ded97'}
             borderRadius={40}

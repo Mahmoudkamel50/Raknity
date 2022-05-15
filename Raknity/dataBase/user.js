@@ -54,4 +54,16 @@ async function addToUserHistory(id, govt, ctNmae, locName, partName, slotIndex, 
     }
 }
 
-export { getUsers, addUser, getUserHistory, addToUserHistory };
+async function checkPendingHistory(id) {
+    let val = false;
+    const history = await getUserHistory(id);
+    for (let i = 0; i < history.length; i++) {
+        if (history[i].status == "pending" || history[i].status == "Checked In") {
+            val = true;
+            break;
+        }        
+    }
+    return val;
+}
+
+export { getUsers, addUser, getUserHistory, addToUserHistory, checkPendingHistory };
