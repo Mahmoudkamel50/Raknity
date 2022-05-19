@@ -54,6 +54,7 @@ export default function SignUp({ navigation }) {
           <Text style={styles.text}>First Name:</Text>
           <TextInput
             placeholder={"Enter your First Name"}
+            placeholderTextColor={'#d3d3d3'}
             onChangeText={setFirstName}
             textAlign="center"
             style={styles.textInputs}
@@ -63,6 +64,7 @@ export default function SignUp({ navigation }) {
           <Text style={styles.text}>Last Name:</Text>
           <TextInput
             placeholder={"Enter your Last Name"}
+            placeholderTextColor={'#d3d3d3'}
             onChangeText={setLastName}
             textAlign="center"
             style={styles.textInputs}
@@ -73,6 +75,7 @@ export default function SignUp({ navigation }) {
           <Text style={styles.text}>Email:</Text>
           <TextInput
             placeholder={"Enter your email"}
+            placeholderTextColor={'#d3d3d3'}
             onChangeText={setEmail}
             value={email}
             textAlign="center"
@@ -83,6 +86,7 @@ export default function SignUp({ navigation }) {
           <Text style={styles.text}>Password:</Text>
           <TextInput
             placeholder={"Enter your Password"}
+            placeholderTextColor={'#d3d3d3'}
             secureTextEntry={true}
             onChangeText={setPassword}
             value={password}
@@ -94,6 +98,7 @@ export default function SignUp({ navigation }) {
           <Text style={styles.text}>Confirm Password:</Text>
           <TextInput
             placeholder={"Enter your Password again"}
+            placeholderTextColor={'#d3d3d3'}
             secureTextEntry={true}
             textAlign="center"
             style={styles.textInputs}
@@ -103,6 +108,7 @@ export default function SignUp({ navigation }) {
           <Text style={styles.text}>Phone:</Text>
           <TextInput
             placeholder={"Enter your Phone"}
+            placeholderTextColor={'#d3d3d3'}
             onChangeText={setPhoneNumber}
             textAlign="center"
             style={styles.textInputs}
@@ -144,7 +150,7 @@ const styles = StyleSheet.create({
   },
   textInputs: {
     flex: 1,
-    backgroundColor: "#d3d3d3",
+    backgroundColor: "#151e3d",
     borderRadius: 40,
     padding: 5,
     width: 100,

@@ -15,7 +15,7 @@ const SignIn = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={{ alignItems: 'center' }}>
-        <Image source={require('../assets/Final-Raknity-logo.png')} style={styles.img} />
+        <Image source={require('../assets/Raknity512.png')} style={styles.img} />
       </View>
       <View style={{ alignItems: 'center' }}>
         <Text style={styles.welcomeTxt}> Welcome to Raknity!</Text>
@@ -28,8 +28,9 @@ const SignIn = ({ navigation }) => {
         <View style={styles.textInput}>
           <TextInput
             placeholder="Enter your email"
+            placeholderTextColor={'#d3d3d3'}
             textAlign="center"
-            style={{ fontSize: 17 }}
+            style={{ fontSize: 17, color: '#fff' }}
             keyboardType="email-address"
             onChangeText={setEmail}
             value={email}
@@ -41,8 +42,9 @@ const SignIn = ({ navigation }) => {
         <View style={styles.textInput}>
           <TextInput
             placeholder="Enter your password"
+            placeholderTextColor={'#d3d3d3'}
             textAlign="center"
-            style={{ fontSize: 17 }}
+            style={{ fontSize: 17, color: '#fff' }}
             onChangeText={setPassword}
             value={password}
             secureTextEntry={true}
@@ -94,7 +96,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    backgroundColor: "#d3d3d3",
+    backgroundColor: "#151e3d",
     borderRadius: 40,
     padding: 5,
   },
