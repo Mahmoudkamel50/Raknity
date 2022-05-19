@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, Button } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Modal } from "react-native";
 import React, { useEffect, useState } from "react";
 import { getUserHistory } from "../dataBase/user";
 import * as WebBrowser from "expo-web-browser";
@@ -10,6 +10,7 @@ import {
   deductFromWallet,
   cancel,
 } from "../dataBase/APIFunctions";
+import QRCode from "react-native-qrcode-svg";
 
 const YourPlaces = ({ user }) => {
   useEffect(() => {
@@ -47,8 +48,39 @@ const YourPlaces = ({ user }) => {
   }
 
   const [history, setHistory] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <View style={styles.container}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <QRCode
+              value={user.uid}
+              size={200}
+              color='#151e3d'
+            />
+            <View style={{paddingTop: 20}}>
+              <Icon.Button
+                name="eye-slash"
+                onPress={() => setModalVisible(!modalVisible)}
+                borderRadius={40}
+                backgroundColor={'#3ded97'}
+              >
+                <Text>Hide QR code</Text>
+              </Icon.Button>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <Text style={styles.titles}>Pending bookings:</Text>
       <ScrollView>
         {history.map((e, index) => {
@@ -82,15 +114,15 @@ const YourPlaces = ({ user }) => {
                   </View>
                   <View style={styles.btView}>
                     <Icon.Button
-                      name="check"
+                      name="qrcode"
                       onPress={() => {
                         console.log(user.uid, index);
-                        checkIn(user.uid, index);
+                        setModalVisible(true);
                       }}
                       backgroundColor={"#3ded97"}
                       borderRadius={40}
                     >
-                      <Text>Check In</Text>
+                      <Text>Show QR code</Text>
                     </Icon.Button>
                   </View>
 
@@ -202,5 +234,26 @@ const styles = StyleSheet.create({
   btView: {
     alignItems: "center",
     paddingHorizontal: 3,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
   },
 });
