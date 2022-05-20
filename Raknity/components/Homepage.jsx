@@ -1,4 +1,4 @@
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, Button, StyleSheet, Modal } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   getGovts,
@@ -16,6 +16,7 @@ import {
 } from "../dataBase/user";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { StatusBar } from 'expo-status-bar';
+import QRCode from "react-native-qrcode-svg";
 
 const Homepage = ({ user, navigation }) => {
 
@@ -74,9 +75,11 @@ const Homepage = ({ user, navigation }) => {
       });
     }
   }
+  const [modalVisible, setModalVisible] = useState(false);
 
-  function sumbit() {
-    submition(chosenGovt, cities, citiesIndex, locIndex, partIndex, slotIndex);
+  async function sumbit() {
+
+    await submition(chosenGovt, cities, citiesIndex, locIndex, user.uid)
   }
 
   function addToHistory() {
@@ -91,6 +94,43 @@ const Homepage = ({ user, navigation }) => {
     );
   }
 
+  function FinalModal() {
+    if (flag == true) {
+      return (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <QRCode
+                value={user.uid}
+                size={200}
+                color='#151e3d'
+              />
+              <View style={{ paddingTop: 20 }}>
+                <Icon.Button
+                  name="eye-slash"
+                  onPress={() => setModalVisible(!modalVisible)}
+                  borderRadius={40}
+                  backgroundColor={'#3ded97'}
+                >
+                  <Text>Hide QR code</Text>
+                </Icon.Button>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )
+    }
+  }
+
+  const [flag, setFlag] = useState(null)
   const [firstName, setFirstName] = useState("");
   const [govts, setGovts] = useState([]);
   const [chosenGovt, setChosenGovt] = useState("");
@@ -107,10 +147,10 @@ const Homepage = ({ user, navigation }) => {
   const [locIndex, setLocIndex] = useState("");
   const [partIndex, setPartIndex] = useState("");
   const [url, setUrl] = useState("");
-  
+
   return (
     <View style={{ flex: 1, padding: 30, backgroundColor: '#151e3d' }}>
-
+      {flag != null ? <FinalModal /> : null}
       <Text style={styles.welcome}>Hi, {firstName}</Text>
       <Text style={{ fontSize: 20, paddingBottom: 5, color: '#fff' }}>Start your booking</Text>
       <View style={styles.pckView}>
@@ -145,14 +185,14 @@ const Homepage = ({ user, navigation }) => {
           <Picker.Item label="Nothing selected" value={""} />
           {cities && cities.length
             ? cities.map((e, index) => {
-                return (
-                  <Picker.Item
-                    label={e.cityName}
-                    value={e.cityName}
-                    key={index}
-                  />
-                );
-              })
+              return (
+                <Picker.Item
+                  label={e.cityName}
+                  value={e.cityName}
+                  key={index}
+                />
+              );
+            })
             : null}
         </Picker>
       </View>
@@ -171,63 +211,15 @@ const Homepage = ({ user, navigation }) => {
           <Picker.Item label="Nothing selected" value={""} />
           {locations && locations.length
             ? locations.map((e, index) => {
-                return (
-                  <Picker.Item
-                    label={e.locationName}
-                    value={e.locationName}
-                    key={index}
-                  />
-                );
-              })
+              return (
+                <Picker.Item
+                  label={e.locationName}
+                  value={e.locationName}
+                  key={index}
+                />
+              );
+            })
             : null}
-        </Picker>
-      </View>
-      <View style={styles.pckView}>
-        <Text style={styles.textStyle}>Choose a Partition:</Text>
-        <Picker
-          selectedValue={chosenPart}
-          onValueChange={(part, index) => {
-            setChosenPart(part);
-            updateSlotList(chosenGovt, chosenCt, chosenLoc, part);
-            setPartIndex(index - 1);
-          }}
-          style={styles.pck}
-          mode='dropdown'
-        >
-          <Picker.Item label="Nothing selected" value={""} />
-          {partitions && partitions.length
-            ? partitions.map((e, index) => {
-                return (
-                  <Picker.Item
-                    label={e.partitionName}
-                    value={e.partitionName}
-                    key={index}
-                  />
-                );
-              })
-            : null}
-        </Picker>
-      </View>
-      <View style={styles.pckView}>
-        <Text style={styles.textStyle}>Choose parking slot:</Text>
-        <Picker
-          selectedValue={chosenSlot}
-          onValueChange={(slot, index) => {
-            setChosenSlot(slot);
-            setSlotIndex(index - 1);
-          }}
-          style={styles.pck}
-          mode='dropdown'
-        >
-          <Picker.Item label="Nothing selected" value={""} />
-          {slots.length != 0 &&
-            slots.map((e, idx) => {
-              if (e == false) {
-                return <Picker.Item label={`${idx}`} value={idx} key={idx} />;
-              } else {
-                return <Picker.Item label={`${idx} occupied`} value={""} key={idx} />;
-              }
-            })}
         </Picker>
       </View>
       <View>
@@ -240,9 +232,13 @@ const Homepage = ({ user, navigation }) => {
                   "You have pending bookings or you haven't checked out. Check 'Your Places' page"
                 );
               } else {
+
                 sumbit();
+                setModalVisible(true);
                 addToHistory();
-                navigation.navigate('Your Places');
+
+
+                // navigation.navigate('Your Places');
               }
             }}
             backgroundColor={"#3ded97"}
@@ -252,7 +248,7 @@ const Homepage = ({ user, navigation }) => {
           </Icon.Button>
         </View>
       </View>
-      <StatusBar style="light"/>
+      <StatusBar style="light" />
     </View>
   );
 };
@@ -282,5 +278,26 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingBottom: 10,
     color: '#fff'
-  }
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
 })
