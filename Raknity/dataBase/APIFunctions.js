@@ -53,7 +53,7 @@ async function getURL(id, cityName, location) {
     if (cityLocs[i].locationName == location) {
       wantedData = cityLocs[i].url;
       break;
-    }    
+    }
   }
   console.log(wantedData);
   return wantedData;
@@ -117,18 +117,6 @@ async function submition(id, citiesList, cityindex, locindex, userId) {
   }
 }
 
-async function checkIn(id, index) {
-  const user = await getUserById(id);
-  const history = user[0].history;
-
-  history[index].status = "Checked In";
-
-  const docRef = doc(db, "users", id);
-  await updateDoc(docRef, {
-    history: history,
-  });
-}
-
 function subscribe(callback) {
   const unsubscribe = onSnapshot(query(collection(db, "users")), (snapshot) => {
     const source = snapshot.metadata.hasPendingWrites ? "Local" : "Server";
@@ -137,55 +125,6 @@ function subscribe(callback) {
     });
   });
   return unsubscribe;
-}
-
-async function checkout(
-  id,
-  histindex,
-  govt,
-  cityname,
-  locname,
-  partname,
-  slotindex
-) {
-  try {
-    const user = await getUserById(id);
-    const history = user[0].history;
-    history[histindex].status = "Checked out";
-    const docRef = doc(db, "users", id);
-    await updateDoc(docRef, {
-      history: history,
-    });
-    const gov = await getGovCities(govt);
-    for (let i = 0; i < gov.cities.length; i++) {
-      if (gov.cities[i].cityName == cityname) {
-        for (let j = 0; j < gov.cities[i].locations.length; j++) {
-          if (gov.cities[i].locations[j].locationName == locname) {
-            for (
-              let k = 0;
-              k < gov.cities[i].locations[j].partitions.length;
-              k++
-            ) {
-              if (
-                gov.cities[i].locations[j].partitions[k].partitionName ==
-                partname
-              ) {
-                gov.cities[i].locations[j].partitions[k].slots[
-                  slotindex
-                ] = false;
-              }
-            }
-          }
-        }
-      }
-    }
-    const locRef = doc(db, "locations", govt);
-    await updateDoc(locRef, {
-      cities: gov.cities,
-    });
-  } catch (e) {
-    console.error(e);
-  }
 }
 
 async function cancel(id, histindex, govt, cityname, locname, partname, slotindex) {
@@ -239,4 +178,61 @@ async function deductFromWallet(id, timeDiff, wallet) {
   }
 }
 
-export {getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition, checkIn, subscribe, checkout, deductFromWallet, cancel, getURL};
+async function checkinslotbyId(id) {
+  try {
+    let flag = false;
+    const govs = await getGovts();
+    let govId;
+    let citieslist;
+
+    for (let i = 0; i < govs.length; i++) {
+      for (let j = 0; j < govs[i].cities.length; j++) {
+        for (let k = 0; k < govs[i].cities[j].locations.length; k++) {
+          for (let l = 0; l < govs[i].cities[j].locations[k].partitions.length; l++) {
+            for (let m = 0; m < govs[i].cities[j].locations[k].partitions[l].slots.length; m++) {
+              if (govs[i].cities[j].locations[k].partitions[l].slots[m].occupiedBy == id) {
+                govs[i].cities[j].locations[k].partitions[l].slots[m].status = "Checked In";
+                flag = true;
+                govId = govs[i].id;
+                citieslist = govs[i].cities;
+                break;
+              }
+            }
+            if (flag == true) {
+              break;
+            }
+          }
+          if (flag == true) {
+            break;
+          }
+        }
+        if (flag == true) {
+          break;
+        }
+      }
+      if (flag == true) {
+        break;
+      }
+    }
+
+    const docRef = doc(db, "locations", govId);
+    await updateDoc(docRef, {
+      cities: citieslist
+    });
+
+    const user = await getUserById(id);
+    const history = user[0].history;
+    history[history.length - 1].status = "Checked In";
+    console.log(history.length - 1);
+    const userRef = doc(db, "users", id);
+    await updateDoc(userRef, {
+      history: history,
+    });
+
+  }
+  catch (e) {
+    console.error(e);
+  }
+}
+
+export { getGovts, getGovCities, getCityLocations, getlocpartitions, getAllSlots, submition, subscribe, deductFromWallet, cancel, getURL, checkinslotbyId };
