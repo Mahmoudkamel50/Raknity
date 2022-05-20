@@ -5,6 +5,8 @@ import AuthorizationStack from "./components/Stacks/AuthorizationStack";
 import AppPages from "./components/Stacks/AppPages";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./dataBase/configuration";
+import { getUserById } from "./dataBase/user";
+import CheckInStack from "./components/Stacks/CheckInStack";
 
 
 
@@ -16,8 +18,16 @@ export default function App() {
       setUser(user);
       if (user) {
         setUserEmail(JSON.stringify(user.email));
+        getUserById(user.uid).then((data) => {
+          console.log(user.uid);
+          console.log(data);
+          setRole(data[0].role)
+          
+        })
       }
     });
+
+    
 
     return () => {
       unsub();
@@ -26,11 +36,19 @@ export default function App() {
 
   const [user, setUser] = useState(undefined)
   const [userEmail, setUserEmail] = useState("");
+  const [role, setRole] = useState("");
 
-      if(user){
+      if(user && role == 'user'){
+        console.log(role);
         return(
          <AppPages user={user}/>
         );
+      }
+      if (user && role == 'pCheckIn') {
+        console.log(role);
+        return (
+          <CheckInStack/>
+        )
       }
       else{
         return(
