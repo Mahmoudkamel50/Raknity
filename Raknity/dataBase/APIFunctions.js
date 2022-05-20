@@ -45,6 +45,20 @@ async function getCityLocations(id, cityName) {
   return wantedData;
 }
 
+async function getURL(id, cityName, location) {
+  const allLocs = await getCityLocations(id, cityName);
+  const cityLocs = allLocs.locations;
+  let wantedData;
+  for (let i = 0; i < cityLocs.length; i++) {
+    if (cityLocs[i].locationName == location) {
+      wantedData = cityLocs[i].url;
+      break;
+    }    
+  }
+  console.log(wantedData);
+  return wantedData;
+}
+
 async function getlocpartitions(id, cityName, locationName) {
   const allLocs = await getCityLocations(id, cityName);
   const locList = allLocs.locations;
@@ -73,16 +87,12 @@ async function getAllSlots(id, cityName, locationName, partitionName) {
 
 async function submition(id, citiesList, cityindex, locindex, userId) {
   try {
-
     let flag = false;
     let partName;
     let slotNum;
-
     for (let i = 0; i < citiesList[cityindex].locations[locindex].partitions.length; i++) {
       for (let j = 0; j < citiesList[cityindex].locations[locindex].partitions[i].slots.length; j++) {
-
         if (citiesList[cityindex].locations[locindex].partitions[i].slots[j].status == 'empty') {
-
           citiesList[cityindex].locations[locindex].partitions[i].slots[j].status = 'pending';
           citiesList[cityindex].locations[locindex].partitions[i].slots[j].occupiedBy = userId;
           partName = citiesList[cityindex].locations[locindex].partitions[i].partitionName;
@@ -92,12 +102,9 @@ async function submition(id, citiesList, cityindex, locindex, userId) {
         }
       }
       if (flag == true) {
-
         break;
-
       }
     }
-
     if (flag == true) {
       const docRef = doc(db, "locations", id);
       await updateDoc(docRef, {
@@ -105,7 +112,6 @@ async function submition(id, citiesList, cityindex, locindex, userId) {
       })
     }
     return { flag, partName, slotNum };
-
   } catch (e) {
     console.error(e);
   }
@@ -260,4 +266,5 @@ export {
   checkout,
   deductFromWallet,
   cancel,
+  getURL
 };
