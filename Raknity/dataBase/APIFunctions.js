@@ -71,22 +71,41 @@ async function getAllSlots(id, cityName, locationName, partitionName) {
   return wantedData;
 }
 
-async function submition(
-  id,
-  citiesList,
-  cityindex,
-  locindex,
-  partindex,
-  slotindex
-) {
+async function submition(id, citiesList, cityindex, locindex, userId) {
   try {
-    citiesList[cityindex].locations[locindex].partitions[partindex].slots[
-      slotindex
-    ] = true;
-    const docRef = doc(db, "locations", id);
-    await updateDoc(docRef, {
-      cities: citiesList,
-    }).then(console.log("slot updated!"));
+
+    let flag = false;
+    let partName;
+    let slotNum;
+
+    for (let i = 0; i < citiesList[cityindex].locations[locindex].partitions.length; i++) {
+      for (let j = 0; j < citiesList[cityindex].locations[locindex].partitions[i].slots.length; j++) {
+
+        if (citiesList[cityindex].locations[locindex].partitions[i].slots[j].status == 'empty') {
+
+          citiesList[cityindex].locations[locindex].partitions[i].slots[j].status = 'pending';
+          citiesList[cityindex].locations[locindex].partitions[i].slots[j].occupiedBy = userId;
+          partName = citiesList[cityindex].locations[locindex].partitions[i].partitionName;
+          slotNum = j;
+          flag = true;
+          break;
+        }
+      }
+      if (flag == true) {
+
+        break;
+
+      }
+    }
+
+    if (flag == true) {
+      const docRef = doc(db, "locations", id);
+      await updateDoc(docRef, {
+        cities: citiesList
+      })
+    }
+    return { flag, partName, slotNum };
+
   } catch (e) {
     console.error(e);
   }
