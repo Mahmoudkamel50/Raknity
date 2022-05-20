@@ -51,7 +51,7 @@ export default function QRScanner({navigation}) {
                 name='check'
                 onPress={() => {
                     checkIn();
-                    // navigation.navigate("Welcome");
+                    navigation.navigate("Welcome");
                 }}
             >
 

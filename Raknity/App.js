@@ -7,6 +7,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./dataBase/configuration";
 import { getUserById } from "./dataBase/user";
 import CheckInStack from "./components/Stacks/CheckInStack";
+import CheckOutStack from "./components/Stacks/CheckOutStack";
 
 
 
@@ -22,12 +23,12 @@ export default function App() {
           console.log(user.uid);
           console.log(data);
           setRole(data[0].role)
-          
+
         })
       }
     });
 
-    
+
 
     return () => {
       unsub();
@@ -38,23 +39,27 @@ export default function App() {
   const [userEmail, setUserEmail] = useState("");
   const [role, setRole] = useState("");
 
-      if(user && role == 'user'){
-        console.log(role);
-        return(
-         <AppPages user={user}/>
-        );
-      }
-      if (user && role == 'pCheckIn') {
-        console.log(role);
-        return (
-          <CheckInStack/>
-        )
-      }
-      else{
-        return(
-        <AuthorizationStack/>
-        )
-      }
+  if (user && role == 'user') {
+    return (
+      <AppPages user={user} />
+    );
+  }
+  if (user && role == 'pCheckIn') {
+    return (
+      <CheckInStack />
+    )
+  }
+  if (user && role == 'pCheckOut') {
+    console.log(role);
+    return (
+      <CheckOutStack />
+    )
+  }
+  else {
+    return (
+      <AuthorizationStack />
+    )
+  }
 
 }
 
