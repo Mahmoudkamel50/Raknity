@@ -3,7 +3,7 @@ import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CheckInHome from '../CheckInCheckOut/CheckInHome';
-import QRScanner from '../CheckInCheckOut/QRScanner';
+import CheckInQrScanner from '../CheckInCheckOut/CheckInQRScanner';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,7 +13,7 @@ const CheckInStack = () => {
     <NavigationContainer>
         <Stack.Navigator>
             <Stack.Screen name='Welcome' component={CheckInHome}/>
-            <Stack.Screen name='Scan your QR code' component={QRScanner}/>
+            <Stack.Screen name='Scan your QR code' component={CheckInQrScanner}/>
         </Stack.Navigator>
     </NavigationContainer>
   )
