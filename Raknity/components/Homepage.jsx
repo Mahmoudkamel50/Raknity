@@ -4,9 +4,8 @@ import {
   getGovts,
   getGovCities,
   getCityLocations,
-  getlocpartitions,
-  getAllSlots,
   submition,
+  getURL,
 } from "../dataBase/APIFunctions";
 import { Picker } from "@react-native-picker/picker";
 import {
@@ -51,84 +50,60 @@ const Homepage = ({ user, navigation }) => {
     }
   }
 
-  function updatePartitionsList(id, ctName, locName) {
-    if (locName != "") {
-      getlocpartitions(id, ctName, locName).then((data) => {
-        setPartitions(data.partitions);
-        setUrl(data.url);
-        data.partitions.map((e) => {
-          console.log(e.partitionName);
-        });
-      });
-    }
-  }
-
-  function updateSlotList(id, ctName, locName, partName) {
-    if (partName != "") {
-      console.log("here in update slot list method");
-      getAllSlots(id, ctName, locName, partName).then((data) => {
-        setSlots(data.slots);
-        console.log(data.slots);
-        data.slots.map((e) => {
-          console.log(e);
-        });
-      });
-    }
-  }
   const [modalVisible, setModalVisible] = useState(false);
 
   async function sumbit() {
-
-    await submition(chosenGovt, cities, citiesIndex, locIndex, user.uid)
+    return await submition(chosenGovt, cities, citiesIndex, locIndex, user.uid);
   }
 
-  function addToHistory() {
+  async function addToHistory(part, slot) {
+    console.log('Values', partName, slotIndex);
     addToUserHistory(
       user.uid,
       chosenGovt,
       chosenCt,
       chosenLoc,
-      chosenPart,
-      slotIndex,
-      url
+      part,
+      slot,
+      await getURL(chosenGovt, chosenCt, chosenLoc),
     );
   }
 
-  function FinalModal() {
-    if (flag == true) {
-      return (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <QRCode
-                value={user.uid}
-                size={200}
-                color='#151e3d'
-              />
-              <View style={{ paddingTop: 20 }}>
-                <Icon.Button
-                  name="eye-slash"
-                  onPress={() => setModalVisible(!modalVisible)}
-                  borderRadius={40}
-                  backgroundColor={'#3ded97'}
-                >
-                  <Text>Hide QR code</Text>
-                </Icon.Button>
-              </View>
-            </View>
-          </View>
-        </Modal>
-      )
-    }
-  }
+  // function FinalModal() {
+  //   if (flag == true) {
+  //     return (
+  //       <Modal
+  //         animationType="slide"
+  //         transparent={true}
+  //         visible={modalVisible}
+  //         onRequestClose={() => {
+  //           Alert.alert("Modal has been closed.");
+  //           setModalVisible(!modalVisible);
+  //         }}
+  //       >
+  //         <View style={styles.centeredView}>
+  //           <View style={styles.modalView}>
+  //             <QRCode
+  //               value={user.uid}
+  //               size={200}
+  //               color='#151e3d'
+  //             />
+  //             <View style={{ paddingTop: 20 }}>
+  //               <Icon.Button
+  //                 name="eye-slash"
+  //                 onPress={() => setModalVisible(!modalVisible)}
+  //                 borderRadius={40}
+  //                 backgroundColor={'#3ded97'}
+  //               >
+  //                 <Text>Hide QR code</Text>
+  //               </Icon.Button>
+  //             </View>
+  //           </View>
+  //         </View>
+  //       </Modal>
+  //     )
+  //   }
+  // }
 
   const [flag, setFlag] = useState(null)
   const [firstName, setFirstName] = useState("");
@@ -138,19 +113,15 @@ const Homepage = ({ user, navigation }) => {
   const [chosenCt, setChosenCt] = useState("");
   const [locations, setLocations] = useState([]);
   const [chosenLoc, setChosenLoc] = useState("");
-  const [partitions, setPartitions] = useState([]);
-  const [chosenPart, setChosenPart] = useState("");
-  const [slots, setSlots] = useState([]);
-  const [chosenSlot, setChosenSlot] = useState("");
+  const [partName, setPartName] = useState("");
   const [slotIndex, setSlotIndex] = useState("");
   const [citiesIndex, setCitiesIndex] = useState("");
   const [locIndex, setLocIndex] = useState("");
-  const [partIndex, setPartIndex] = useState("");
   const [url, setUrl] = useState("");
 
   return (
     <View style={{ flex: 1, padding: 30, backgroundColor: '#151e3d' }}>
-      {flag != null ? <FinalModal /> : null}
+      {/* {flag != null ? <FinalModal /> : null} */}
       <Text style={styles.welcome}>Hi, {firstName}</Text>
       <Text style={{ fontSize: 20, paddingBottom: 5, color: '#fff' }}>Start your booking</Text>
       <View style={styles.pckView}>
@@ -200,9 +171,8 @@ const Homepage = ({ user, navigation }) => {
         <Text style={styles.textStyle}>Choose location:</Text>
         <Picker
           selectedValue={chosenLoc}
-          onValueChange={(loc, index) => {
+          onValueChange={async (loc, index) => {
             setChosenLoc(loc);
-            updatePartitionsList(chosenGovt, chosenCt, loc);
             setLocIndex(index - 1);
           }}
           style={styles.pck}
@@ -232,12 +202,9 @@ const Homepage = ({ user, navigation }) => {
                   "You have pending bookings or you haven't checked out. Check 'Your Places' page"
                 );
               } else {
-
-                sumbit();
+                const submValues = await sumbit();
                 setModalVisible(true);
-                addToHistory();
-
-
+                addToHistory(submValues.partName, submValues.slotNum);
                 // navigation.navigate('Your Places');
               }
             }}
@@ -248,6 +215,8 @@ const Homepage = ({ user, navigation }) => {
           </Icon.Button>
         </View>
       </View>
+      <Text>{partName}</Text>
+      <Text>{slotIndex}</Text>
       <StatusBar style="light" />
     </View>
   );
