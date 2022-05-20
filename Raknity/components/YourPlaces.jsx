@@ -165,28 +165,18 @@ const YourPlaces = ({ user }) => {
                   </Text>
                 </View>
                 <View style={styles.btView}>
-                  <Icon.Button
-                    name="sign-out"
-                    onPress={() => {
-                      checkout(
-                        user.uid,
-                        index,
-                        e.government,
-                        e.cityName,
-                        e.locationName,
-                        e.partitionName,
-                        e.slot
-                      );
-                      const timeDiff =
-                        e.bookingTime.seconds - new Date().getSeconds();
-                      deductFromWallet(user.uid, timeDiff, e.wallet);
-                    }}
-                    backgroundColor={"#3ded97"}
-                    borderRadius={40}
-                  >
-                    <Text>Check Out</Text>
-                  </Icon.Button>
-                </View>
+                    <Icon.Button
+                      name="qrcode"
+                      onPress={() => {
+                        console.log(user.uid, index);
+                        setModalVisible(true);
+                      }}
+                      backgroundColor={"#3ded97"}
+                      borderRadius={40}
+                    >
+                      <Text>Show QR code</Text>
+                    </Icon.Button>
+                  </View>
               </View>
             );
           }
