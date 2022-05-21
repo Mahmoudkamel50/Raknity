@@ -9,6 +9,7 @@ import { getUserById } from "./dataBase/user";
 import CheckInStack from "./components/Stacks/CheckInStack";
 import CheckOutStack from "./components/Stacks/CheckOutStack";
 import AdminStack from "./components/Stacks/AdminStack";
+import Banned from "./components/Banned";
 
 
 
@@ -23,8 +24,8 @@ export default function App() {
         getUserById(user.uid).then((data) => {
           console.log(user.uid);
           console.log(data);
-          setRole(data[0].role)
-
+          setRole(data[0].role);
+          setBanned(data[0].banned);
         })
       }
     });
@@ -39,11 +40,17 @@ export default function App() {
   const [user, setUser] = useState(undefined)
   const [userEmail, setUserEmail] = useState("");
   const [role, setRole] = useState("");
+  const [banned, setBanned] = useState(null);
 
-  if (user && role == 'user') {
+  if (user && role == 'user' && banned == false) {
     return (
       <AppPages user={user} />
     );
+  }
+  if (user && role == 'user' && banned == true) {
+    return (
+      <Banned />
+    )
   }
   if (user && role == 'pCheckIn') {
     return (
@@ -56,7 +63,7 @@ export default function App() {
       <CheckOutStack />
     )
   }
-  if (user && role == 'admin' ) {
+  if (user && role == 'admin') {
     console.log(role);
     return (
       <AdminStack />
