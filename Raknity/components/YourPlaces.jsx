@@ -68,7 +68,7 @@ const YourPlaces = ({ user }) => {
               size={200}
               color='#151e3d'
             />
-            <View style={{paddingTop: 20}}>
+            <View style={{ paddingTop: 20 }}>
               <Icon.Button
                 name="eye-slash"
                 onPress={() => setModalVisible(!modalVisible)}
@@ -82,7 +82,7 @@ const YourPlaces = ({ user }) => {
         </View>
       </Modal>
       <Text style={styles.titles}>Pending bookings:</Text>
-      <ScrollView>
+      <ScrollView style={{ height: '30%', padding: 5,}}>
         {history.map((e, index) => {
           console.log(e.bookingTime);
           if (e.status == "pending") {
@@ -90,8 +90,7 @@ const YourPlaces = ({ user }) => {
               <View key={index} style={{ alignItems: "center" }}>
                 <View>
                   <Text style={styles.locations}>
-                    {e.government}, {e.cityName}, {e.locationName},{" "}
-                    {e.partitionName}
+                    {e.government}, {e.cityName}, {e.locationName}, {e.partitionName}{e.slot}
                   </Text>
                 </View>
                 <View
@@ -153,45 +152,45 @@ const YourPlaces = ({ user }) => {
         })}
       </ScrollView>
       <Text style={styles.titles}>Checked in bookings:</Text>
-      <ScrollView>
+      <ScrollView style={{ height: '30%', padding: 5,}}>
         {history.map((e, index) => {
           if (e.status == "Checked In") {
             return (
               <View key={index} style={{ alignItems: "center" }}>
                 <View>
                   <Text style={styles.locations}>
-                    {e.government}, {e.cityName}, {e.locationName},{" "}
-                    {e.partitionName}
+                    {e.government}, {e.cityName}, {e.locationName}, {e.partitionName}{e.slot}
                   </Text>
                 </View>
                 <View style={styles.btView}>
-                    <Icon.Button
-                      name="qrcode"
-                      onPress={() => {
-                        console.log(user.uid, index);
-                        setModalVisible(true);
-                      }}
-                      backgroundColor={"#3ded97"}
-                      borderRadius={40}
-                    >
-                      <Text>Show QR code</Text>
-                    </Icon.Button>
-                  </View>
+                  <Icon.Button
+                    name="qrcode"
+                    onPress={() => {
+                      console.log(user.uid, index);
+                      setModalVisible(true);
+                    }}
+                    backgroundColor={"#3ded97"}
+                    borderRadius={40}
+                  >
+                    <Text>Show QR code</Text>
+                  </Icon.Button>
+                </View>
               </View>
             );
           }
         })}
       </ScrollView>
-
-      <Text style={styles.titles}>Your previous bookings:</Text>
-      <ScrollView>
+      <View style={styles.titleView}>
+        <Text style={styles.titles}>Your previous bookings:</Text>
+      </View>
+      <ScrollView style={{ height: '40%', padding: 5,}}>
         {history.map((e, index) => {
           if (e.status == "Checked out") {
             return (
-              <View key={index}>
+              <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }} key={index}>
+                <View style={{ backgroundColor: '#fff', height: 5, width: 5, borderRadius: 5, }}></View>
                 <Text style={styles.locations}>
-                  {e.government}, {e.cityName}, {e.locationName},{" "}
-                  {e.partitionName}
+                  {e.government}, {e.cityName}, {e.locationName}, {e.partitionName}{e.slot}
                 </Text>
               </View>
             );
@@ -213,7 +212,7 @@ const styles = StyleSheet.create({
   titles: {
     fontSize: 20,
     padding: 5,
-    color: '#fff'
+    color: '#3ded97',
   },
   locations: {
     fontSize: 16,
@@ -246,4 +245,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
   },
+  titleView: {
+    backgroundColor: ''
+  }
 });
