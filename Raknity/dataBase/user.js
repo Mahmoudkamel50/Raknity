@@ -100,4 +100,23 @@ async function banUser(email) {
     }
 }
 
-export { getUsers, addUser, getUserHistory, addToUserHistory, checkPendingHistory, editprofile, banUser };
+async function UnbanUser(email) {
+    try {
+        const users = await getUsers();
+        let id;
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].email == email) {
+                id = users[i].id;
+                break;
+            }
+        }
+        const docRef = doc(db, 'users', id);
+        await updateDoc(docRef, {
+            banned: false
+        });
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export { getUsers, addUser, getUserHistory, addToUserHistory, checkPendingHistory, editprofile, banUser , UnbanUser};
