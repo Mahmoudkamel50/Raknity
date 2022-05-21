@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Icon from "react-native-vector-icons/FontAwesome";
+import { logout } from '../../dataBase/authorization';
+import { StatusBar } from 'expo-status-bar';
 
-const AdminHome = ({navigation}) => {
+const AdminHome = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.titles}>Control users</Text>
@@ -16,7 +18,7 @@ const AdminHome = ({navigation}) => {
                             navigation.navigate('Ban user');
                         }}
                     >
-                        <Text>Ban user</Text>
+                        <Text>User Permissions</Text>
                     </Icon.Button>
                 </View>
                 <View>
@@ -41,6 +43,17 @@ const AdminHome = ({navigation}) => {
                     </Icon.Button>
                 </View>
             </View>
+            <View style={{ alignItems: "center" , top: 400}}>
+                <Icon.Button
+                    name="sign-out"
+                    onPress={() => { logout() }}
+                    backgroundColor={'#3ded97'}
+                    borderRadius={40}
+                >
+                    <Text>Log out</Text>
+                </Icon.Button>
+            </View>
+            <StatusBar style='light'/>
         </View>
     )
 }
