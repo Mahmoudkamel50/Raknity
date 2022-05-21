@@ -40,6 +40,16 @@ export default function AdminStack() {
             headerTintColor: "#3ded97",
           }}
         />
+        <Stack.Screen
+          name="Cancel booking"
+          component={EditUser}
+          options={{
+            headerStyle: {
+              backgroundColor: "#151e3d",
+            },
+            headerTintColor: "#3ded97",
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
