@@ -8,6 +8,7 @@ import { auth } from "./dataBase/configuration";
 import { getUserById } from "./dataBase/user";
 import CheckInStack from "./components/Stacks/CheckInStack";
 import CheckOutStack from "./components/Stacks/CheckOutStack";
+import AdminStack from "./components/Stacks/AdminStack";
 
 
 
@@ -53,6 +54,12 @@ export default function App() {
     console.log(role);
     return (
       <CheckOutStack />
+    )
+  }
+  if (user && role == 'admin' ) {
+    console.log(role);
+    return (
+      <AdminStack />
     )
   }
   else {
