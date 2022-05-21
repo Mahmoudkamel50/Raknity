@@ -7,7 +7,6 @@ import {
   Text,
   TextInput,
 } from "react-native";
-import { getUsers } from "../dataBase/user";
 import { getUserUId } from "../dataBase/authorization";
 import { getUserById } from "../dataBase/user";
 import { useState, useEffect } from "react";
@@ -26,6 +25,7 @@ export default function Profile({ navigation }) {
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [wallet, setWallet] = useState("");
+  const [id, setId] = useState("");
 
   useEffect(() => {
     const unsubscribe = subscribe(({ change, snapshot }) => {
@@ -75,6 +75,7 @@ export default function Profile({ navigation }) {
   useEffect(() => {
     getUserUId().then((id) => {
       console.log(id);
+      setId(id);
       getUserById(id).then((user) => {
         setEmail(user[0].email);
         setPhoneNumber(user[0].phoneNumber);
@@ -87,7 +88,7 @@ export default function Profile({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={{ padding: 30 }}>
+      <ScrollView style={{ padding: 10 }}>
         <View style={{ padding: 10 }}>
           <Text style={styles.title}>First Name:</Text>
           <Text style={styles.info}>{firstName}</Text>
@@ -113,19 +114,38 @@ export default function Profile({ navigation }) {
           <Text style={styles.info}>{phoneNumber}</Text>
         </View>
 
+        <View style={{ padding: 10 }}>
+          <Text style={styles.title}>Your ID:</Text>
+          <Text style={styles.info}>{id}</Text>
+        </View>
+
         <StatusBar style="auto" />
       </ScrollView>
-      <View style={{ alignItems: "center", marginBottom: 70 }}>
-        <Icon.Button
-          name="sign-out"
-          onPress={() => { logout() }}
-          backgroundColor={'#3ded97'}
-          borderRadius={40}
-        >
-          <Text>Log out</Text>
-        </Icon.Button>
+      <View style={{ flexDirection: "row", justifyContent: "space-around" , padding: 20 }}>
+        <View style={{ alignItems: "center" }}>
+          <Icon.Button
+            name="edit"
+            onPress={() => {
+              navigation.navigate("Edit profile", { id: id, firstName: firstName, lastName: lastName, phone: phoneNumber });
+            }}
+            backgroundColor={'#3ded97'}
+            borderRadius={40}
+          >
+            <Text>Edit your profile</Text>
+          </Icon.Button>
+        </View>
+        <View style={{ alignItems: "center" }}>
+          <Icon.Button
+            name="sign-out"
+            onPress={() => { logout() }}
+            backgroundColor={'#3ded97'}
+            borderRadius={40}
+          >
+            <Text>Log out</Text>
+          </Icon.Button>
+        </View>
       </View>
-      <StatusBar style="light"/>
+      <StatusBar style="light" />
     </View>
   );
 }
