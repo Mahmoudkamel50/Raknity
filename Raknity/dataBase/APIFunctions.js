@@ -281,9 +281,15 @@ async function checkoutslotbyId(id) {
     const user = await getUserById(id);
     const history = user[0].history;
     history[history.length - 1].status = "Checked out";
-    console.log(history[history.length - 1].checkInTime.seconds);
+    console.log('cur time', new Date().getTime() / 1000);
+    console.log('check in time', history[history.length - 1].checkInTime.seconds);
+    console.log('time diff', (new Date().getTime() / 1000) - (history[history.length - 1].checkInTime.seconds));
+    const timeDiffSec = (new Date().getTime() / 1000) - (history[history.length - 1].checkInTime.seconds);
+    const timeDiffMin = timeDiffSec / 60;
+    const newWallet = user[0].wallet - ((10 / 60) * timeDiffMin);
     const userRef = doc(db, "users", id);
     await updateDoc(userRef, {
+      wallet: newWallet.toFixed(3),
       history: history,
     });
   }
