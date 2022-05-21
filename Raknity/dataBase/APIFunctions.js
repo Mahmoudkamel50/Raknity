@@ -223,12 +223,12 @@ async function checkinslotbyId(id) {
     const user = await getUserById(id);
     const history = user[0].history;
     history[history.length - 1].status = "Checked In";
+    history[history.length - 1].checkInTime = new Date();
     console.log(history.length - 1);
     const userRef = doc(db, "users", id);
     await updateDoc(userRef, {
       history: history,
     });
-
   }
   catch (e) {
     console.error(e);
@@ -272,7 +272,7 @@ async function checkoutslotbyId(id) {
         break;
       }
     }
-
+    console.log(id);
     const docRef = doc(db, "locations", govId);
     await updateDoc(docRef, {
       cities: citieslist
@@ -281,12 +281,11 @@ async function checkoutslotbyId(id) {
     const user = await getUserById(id);
     const history = user[0].history;
     history[history.length - 1].status = "Checked out";
-    console.log(history.length - 1);
+    console.log(history[history.length - 1].checkInTime.seconds);
     const userRef = doc(db, "users", id);
     await updateDoc(userRef, {
       history: history,
     });
-
   }
   catch (e) {
     console.error(e);

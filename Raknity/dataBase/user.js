@@ -45,6 +45,7 @@ async function addToUserHistory(id, govt, ctNmae, locName, partName, slotIndex, 
                 slot: slotIndex,
                 status: "pending",
                 bookingTime: new Date(),
+                checkInTime: null,
                 url: url,
             })
         })
