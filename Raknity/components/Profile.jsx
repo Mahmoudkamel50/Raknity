@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 import * as React from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { logout } from "../dataBase/authorization";
+import { subscribe } from "../dataBase/APIFunctions";
 
 const routeName = "Profile";
 
@@ -25,6 +26,51 @@ export default function Profile({ navigation }) {
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [wallet, setWallet] = useState("");
+
+  useEffect(() => {
+    const unsubscribe = subscribe(({ change, snapshot }) => {
+      if (change.type === "added") {
+        getUserUId().then((id) => {
+          console.log(id);
+          getUserById(id).then((user) => {
+            setEmail(user[0].email);
+            setPhoneNumber(user[0].phoneNumber);
+            setFirstName(user[0].firstName);
+            setLastName(user[0].lastName);
+            setWallet(user[0].wallet);
+          });
+        });
+      }
+      if (change.type === "modified") {
+        getUserUId().then((id) => {
+          console.log(id);
+          getUserById(id).then((user) => {
+            setEmail(user[0].email);
+            setPhoneNumber(user[0].phoneNumber);
+            setFirstName(user[0].firstName);
+            setLastName(user[0].lastName);
+            setWallet(user[0].wallet);
+          });
+        });
+      }
+      if (change.type === "removed") {
+        getUserUId().then((id) => {
+          console.log(id);
+          getUserById(id).then((user) => {
+            setEmail(user[0].email);
+            setPhoneNumber(user[0].phoneNumber);
+            setFirstName(user[0].firstName);
+            setLastName(user[0].lastName);
+            setWallet(user[0].wallet);
+          });
+        });
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     getUserUId().then((id) => {
