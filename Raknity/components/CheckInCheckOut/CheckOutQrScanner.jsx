@@ -12,7 +12,12 @@ export default function CheckOutQrScanner({ navigation }) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [id, setId] = useState("");
-    const [modalVisible, setModalVisible] = useState(false);
+    const [checkInT, setCheckInT] = useState("");
+    const [checkOutT, setCheckOutT] = useState("");
+    const [timespent, setTimespent] = useState("");
+    const [payment, setPayment] = useState("");
+    const [modalVisibleconf, setModalVisibleconf] = useState(false);
+    const [modalVisiblerec, setModalVisiblerec] = useState(false);
 
 
     useEffect(() => {
@@ -29,7 +34,7 @@ export default function CheckOutQrScanner({ navigation }) {
             setEmail(user[0].email)
         })
         setId(data);
-        setModalVisible(true);
+        setModalVisibleconf(true);
     };
 
 
@@ -42,11 +47,30 @@ export default function CheckOutQrScanner({ navigation }) {
     }
 
     async function checkOut() {
-        await checkoutslotbyId(id);
+        await checkoutslotbyId(id).then((data) => {
+            setCheckInT(data.checkInTime);
+            setCheckOutT(data.checkOutTime);
+            setTimespent(data.timeDiffMin);
+            setPayment(data.payment);
+        })
     }
 
     return (
         <View style={styles.container}>
+            <View style={{ padding: 10 }}>
+                <Text style={{ fontSize: 16 }}>Navigate to "Your Places" tab {'>'} under your Checked</Text>
+                <View style={{ flexDirection: "row", paddingTop: 10 }}>
+                    <Text style={{ fontSize: 16 }}>In bookings press</Text>
+                    <View style={{ backgroundColor: '#3ded97', borderRadius: 40, padding: 10, flexDirection: "row", bottom: 10, left: 20 }}>
+                        <Icon
+                            name="qrcode"
+                            color={"#fff"}
+                            size={20}
+                        />
+                        <Text style={{ color: "#151e3d" }}>  Show your Qr code</Text>
+                    </View>
+                </View>
+            </View>
             <View style={styles.camView}>
                 <BarCodeScanner
                     onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
@@ -55,19 +79,19 @@ export default function CheckOutQrScanner({ navigation }) {
             </View>
             <Modal
                 animationType='slide'
-                visible={modalVisible}
+                visible={modalVisibleconf}
                 transparent={true}
                 onRequestClose={() => {
-                    setModalVisible(!modalVisible);
+                    setModalVisibleconf(!modalVisibleconf);
                 }}
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         {name != "" ?
                             <View>
-                                <Text style={{fontSize: 20, fontWeight: 'bold',}}>Check your identity:</Text>
-                                <Text style={{fontSize: 16, padding: 5,}}>Your name: {name}</Text>
-                                <Text style={{fontSize: 16, padding: 5,}}>Your email: {email}</Text>
+                                <Text style={{ fontSize: 20, fontWeight: 'bold', }}>Check your identity:</Text>
+                                <Text style={{ fontSize: 16, padding: 5, }}>Your name: {name}</Text>
+                                <Text style={{ fontSize: 16, padding: 5, }}>Your email: {email}</Text>
                             </View>
                             : null}
                         <View style={styles.btview}>
@@ -77,11 +101,47 @@ export default function CheckOutQrScanner({ navigation }) {
                                 borderRadius={40}
                                 onPress={() => {
                                     checkOut();
-                                    navigation.navigate("Welcome");
-                                    setModalVisible(false);
+                                    setModalVisibleconf(false);
+                                    setModalVisiblerec(true);
                                 }}
                             >
                                 <Text>Confirm</Text>
+                            </Icon.Button>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
+            <Modal
+                animationType='slide'
+                visible={modalVisiblerec}
+                transparent={true}
+                onRequestClose={() => {
+                    setModalVisiblerec(!modalVisiblerec);
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        {checkInT != "" && checkOutT != "" && timespent != "" && payment != "" ?
+                            <View>
+                                <Text style={{ fontSize: 20, fontWeight: 'bold', }}>Your receipt</Text>
+                                <Text style={{ fontSize: 16, padding: 5, }}>You Checked In at: {checkInT.toString()}</Text>
+                                <Text style={{ fontSize: 16, padding: 5, }}>You Checked Out at: {checkOutT.toString()}</Text>
+                                <Text style={{ fontSize: 16, padding: 5, }}>You Spent: {timespent} MINS</Text>
+                                <Text style={{ fontSize: 16, padding: 5, }}>You Paied: {payment} EGP</Text>
+                            </View>
+                            : null}
+                        <View style={styles.btview}>
+                            <Icon.Button
+                                name='check'
+                                backgroundColor={'#3ded97'}
+                                borderRadius={40}
+                                onPress={() => {
+                                    setModalVisiblerec(false);
+                                    navigation.navigate("Welcome");
+                                }}
+                            >
+                                <Text>Ok</Text>
                             </Icon.Button>
                         </View>
                     </View>
