@@ -81,4 +81,23 @@ async function editprofile(id, fname, lname, phone) {
     }
 }
 
-export { getUsers, addUser, getUserHistory, addToUserHistory, checkPendingHistory, editprofile };
+async function banUser(email) {
+    try {
+        const users = await getUsers();
+        let id;
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].email == email) {
+                id = users[i].id;
+                break;
+            }
+        }
+        const docRef = doc(db, 'users', id);
+        await updateDoc(docRef, {
+            banned: true
+        });
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export { getUsers, addUser, getUserHistory, addToUserHistory, checkPendingHistory, editprofile, banUser };
