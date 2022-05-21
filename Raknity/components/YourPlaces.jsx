@@ -82,7 +82,7 @@ const YourPlaces = ({ user }) => {
         </View>
       </Modal>
       <Text style={styles.titles}>Pending bookings:</Text>
-      <ScrollView style={{ height: '30%', padding: 5,}}>
+      <ScrollView style={{ height: '20%', padding: 5, }}>
         {history.map((e, index) => {
           console.log(e.bookingTime);
           if (e.status == "pending") {
@@ -152,7 +152,7 @@ const YourPlaces = ({ user }) => {
         })}
       </ScrollView>
       <Text style={styles.titles}>Checked in bookings:</Text>
-      <ScrollView style={{ height: '30%', padding: 5,}}>
+      <ScrollView style={{ height: '20%', padding: 5, }}>
         {history.map((e, index) => {
           if (e.status == "Checked In") {
             return (
@@ -180,10 +180,8 @@ const YourPlaces = ({ user }) => {
           }
         })}
       </ScrollView>
-      <View style={styles.titleView}>
-        <Text style={styles.titles}>Your previous bookings:</Text>
-      </View>
-      <ScrollView style={{ height: '40%', padding: 5,}}>
+      <Text style={styles.titles}>Your previous bookings:</Text>
+      <ScrollView style={{ height: '60%', padding: 5, }}>
         {history.map((e, index) => {
           if (e.status == "Checked out") {
             return (
@@ -205,7 +203,7 @@ export default YourPlaces;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 30,
+    padding: 20,
     backgroundColor: '#151e3d',
     flex: 1,
   },
@@ -245,7 +243,5 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
   },
-  titleView: {
-    backgroundColor: ''
-  }
+
 });

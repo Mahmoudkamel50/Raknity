@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Modal } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { getUserById } from '../../dataBase/user';
 import Icon from "react-native-vector-icons/FontAwesome";
-import { checkinslotbyId,} from '../../dataBase/APIFunctions';
+import { checkinslotbyId, } from '../../dataBase/APIFunctions';
 
 
 export default function CheckInQrScanner({ navigation }) {
@@ -47,6 +47,20 @@ export default function CheckInQrScanner({ navigation }) {
 
     return (
         <View style={styles.container}>
+            <View style={{ padding: 10 }}>
+                <Text style={{ fontSize: 16 }}>Navigate to "Your Places" tab {'>'} under your Pending </Text>
+                <View style={{ flexDirection: "row", paddingTop: 10 }}>
+                    <Text style={{ fontSize: 16 }}>bookings press</Text>
+                    <View style={{ backgroundColor: '#3ded97', borderRadius: 40, padding: 10, flexDirection: "row", bottom: 10, left: 20 }}>
+                        <Icon
+                            name="qrcode"
+                            color={"#fff"}
+                            size={20}
+                        />
+                        <Text style={{ color: "#151e3d" }}>  Show your Qr code</Text>
+                    </View>
+                </View>
+            </View>
             <View style={styles.camView}>
                 <BarCodeScanner
                     onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
@@ -65,9 +79,9 @@ export default function CheckInQrScanner({ navigation }) {
                     <View style={styles.modalView}>
                         {name != "" ?
                             <View>
-                                <Text style={{fontSize: 20, fontWeight: 'bold',}}>Check your identity:</Text>
-                                <Text style={{fontSize: 16, padding: 5,}}>Your name: {name}</Text>
-                                <Text style={{fontSize: 16, padding: 5,}}>Your email: {email}</Text>
+                                <Text style={{ fontSize: 20, fontWeight: 'bold', }}>Check your identity:</Text>
+                                <Text style={{ fontSize: 16, padding: 5, }}>Your name: {name}</Text>
+                                <Text style={{ fontSize: 16, padding: 5, }}>Your email: {email}</Text>
                             </View>
                             : null}
                         <View style={styles.btview}>
