@@ -15,7 +15,6 @@ import {
 } from "../dataBase/user";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { StatusBar } from 'expo-status-bar';
-import QRCode from "react-native-qrcode-svg";
 
 const Homepage = ({ user, navigation }) => {
 
