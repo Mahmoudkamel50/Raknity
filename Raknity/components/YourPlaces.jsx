@@ -203,7 +203,7 @@ export default YourPlaces;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 10,
     backgroundColor: '#151e3d',
     flex: 1,
   },
