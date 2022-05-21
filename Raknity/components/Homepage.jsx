@@ -50,61 +50,110 @@ const Homepage = ({ user, navigation }) => {
     }
   }
 
-  const [modalVisible, setModalVisible] = useState(false);
-
   async function sumbit() {
-    return await submition(chosenGovt, cities, citiesIndex, locIndex, user.uid);
+    const sub = await submition(chosenGovt, cities, citiesIndex, locIndex, user.uid);
+    setFlag(sub.flag);
+    setPartName(sub.partName);
+    setSlotIndex(sub.slotNum);
+    return sub;
   }
 
-  async function addToHistory(part, slot) {
+  async function addToHistory(part, slot, flag) {
     console.log('Values', partName, slotIndex);
-    addToUserHistory(
-      user.uid,
-      chosenGovt,
-      chosenCt,
-      chosenLoc,
-      part,
-      slot,
-      await getURL(chosenGovt, chosenCt, chosenLoc),
-    );
+    console.log('flag', flag);
+    if (flag == true) {
+      addToUserHistory(
+        user.uid,
+        chosenGovt,
+        chosenCt,
+        chosenLoc,
+        part,
+        slot,
+        await getURL(chosenGovt, chosenCt, chosenLoc),
+      );
+    }
   }
 
-  // function FinalModal() {
-  //   if (flag == true) {
-  //     return (
-  //       <Modal
-  //         animationType="slide"
-  //         transparent={true}
-  //         visible={modalVisible}
-  //         onRequestClose={() => {
-  //           Alert.alert("Modal has been closed.");
-  //           setModalVisible(!modalVisible);
-  //         }}
-  //       >
-  //         <View style={styles.centeredView}>
-  //           <View style={styles.modalView}>
-  //             <QRCode
-  //               value={user.uid}
-  //               size={200}
-  //               color='#151e3d'
-  //             />
-  //             <View style={{ paddingTop: 20 }}>
-  //               <Icon.Button
-  //                 name="eye-slash"
-  //                 onPress={() => setModalVisible(!modalVisible)}
-  //                 borderRadius={40}
-  //                 backgroundColor={'#3ded97'}
-  //               >
-  //                 <Text>Hide QR code</Text>
-  //               </Icon.Button>
-  //             </View>
-  //           </View>
-  //         </View>
-  //       </Modal>
-  //     )
-  //   }
-  // }
+  function FinalModal() {
+    console.log(flag);
+    if (flag == true) {
+      console.log(flag);
+      return (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Icon
+                name="check"
+                size={30}
+                color='#3ded97'
+              />
+              <Text style={{ color: '#3ded97', fontSize: 20, fontWeight: 'bold' }}>Booked successfully!</Text>
+              <Text style={{ fontSize: 16 }}>Your booked place is {partName}{slotIndex}</Text>
+              <View style={{ paddingTop: 20 }}>
+                <Icon.Button
+                  name="check"
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                    navigation.navigate('Your Places');
+                  }}
+                  borderRadius={40}
+                  backgroundColor={'#3ded97'}
+                >
+                  <Text>Done</Text>
+                </Icon.Button>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )
+    }
+    if (flag == false) {
+      return (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+            <Icon
+                name="remove"
+                size={30}
+                color='#f00'
+              />
+              <Text style={{ color: '#f00', fontSize: 20, fontWeight: 'bold' }}>Booking failed!</Text>
+              <Text style={{ fontSize: 16 }}>Try again later or choose a different location</Text>
+              <View style={{ paddingTop: 20 }}>
+                <Icon.Button
+                  name="remove"
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                    setChosenLoc("");
+                  }}
+                  borderRadius={40}
+                  backgroundColor={'#ff5c5c'}
+                >
+                  <Text>Close</Text>
+                </Icon.Button>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )
+    }
+  }
 
+  const [modalVisible, setModalVisible] = useState(false);
   const [flag, setFlag] = useState(null)
   const [firstName, setFirstName] = useState("");
   const [govts, setGovts] = useState([]);
@@ -121,7 +170,7 @@ const Homepage = ({ user, navigation }) => {
 
   return (
     <View style={{ flex: 1, padding: 30, backgroundColor: '#151e3d' }}>
-      {/* {flag != null ? <FinalModal /> : null} */}
+      {flag != null ? <FinalModal /> : null}
       <Text style={styles.welcome}>Hi, {firstName}</Text>
       <Text style={{ fontSize: 20, paddingBottom: 5, color: '#fff' }}>Start your booking</Text>
       <View style={styles.pckView}>
@@ -203,9 +252,8 @@ const Homepage = ({ user, navigation }) => {
                 );
               } else {
                 const submValues = await sumbit();
+                addToHistory(submValues.partName, submValues.slotNum, submValues.flag);
                 setModalVisible(true);
-                addToHistory(submValues.partName, submValues.slotNum);
-                // navigation.navigate('Your Places');
               }
             }}
             backgroundColor={"#3ded97"}
@@ -215,8 +263,6 @@ const Homepage = ({ user, navigation }) => {
           </Icon.Button>
         </View>
       </View>
-      <Text>{partName}</Text>
-      <Text>{slotIndex}</Text>
       <StatusBar style="light" />
     </View>
   );
