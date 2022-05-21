@@ -101,7 +101,7 @@ const YourPlaces = ({ user }) => {
                 >
                   <View style={styles.btView}>
                     <Icon.Button
-                      name="send"
+                      name="location-arrow"
                       onPress={() => {
                         openLink(e.url);
                       }}
