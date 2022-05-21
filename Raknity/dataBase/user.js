@@ -62,9 +62,23 @@ async function checkPendingHistory(id) {
         if (history[i].status == "pending" || history[i].status == "Checked In") {
             val = true;
             break;
-        }        
+        }
     }
     return val;
 }
 
-export { getUsers, addUser, getUserHistory, addToUserHistory, checkPendingHistory };
+async function editprofile(id, fname, lname, phone) {
+    try {
+        const docRef = doc(db, "users", id);
+        await updateDoc(docRef, {
+            firstName: fname,
+            lastName: lname,
+            phoneNumber: phone,
+        });
+    }
+    catch (e) {
+        console.error(e);
+    }
+}
+
+export { getUsers, addUser, getUserHistory, addToUserHistory, checkPendingHistory, editprofile };
