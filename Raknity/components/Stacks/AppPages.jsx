@@ -24,8 +24,8 @@ const AppPages = ({ user }) => {
             }
             return <Icon name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: '#c7ffc7',
-          tabBarInactiveTintColor: '#fff',
+          tabBarActiveTintColor: '#3ded97',
+          tabBarInactiveTintColor: '#c7ffc7',
           tabBarStyle: { backgroundColor: '#151e3d' }
         })}
       >
