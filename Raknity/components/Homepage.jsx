@@ -14,17 +14,41 @@ import {
   getUserById,
 } from "../dataBase/user";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from "expo-status-bar";
+import { subscribe } from "../dataBase/APIFunctions";
 
 const Homepage = ({ user, navigation }) => {
-
   useEffect(() => {
-    getGovts().then((data) => {
-      setGovts(data);
+    const unsubscribe = subscribe(({ change, snapshot }) => {
+      if (change.type === "added") {
+        getGovts().then((data) => {
+          setGovts(data);
+        });
+        getUserById(user.uid).then((data) => {
+          setFirstName(data[0].firstName);
+        });
+      }
+      if (change.type === "modified") {
+        getGovts().then((data) => {
+          setGovts(data);
+        });
+        getUserById(user.uid).then((data) => {
+          setFirstName(data[0].firstName);
+        });
+      }
+      if (change.type === "removed") {
+        getGovts().then((data) => {
+          setGovts(data);
+        });
+        getUserById(user.uid).then((data) => {
+          setFirstName(data[0].firstName);
+        });
+      }
     });
-    getUserById(user.uid).then((data) => {
-      setFirstName(data[0].firstName);
-    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   function updateCitiesList(govt) {
@@ -50,7 +74,13 @@ const Homepage = ({ user, navigation }) => {
   }
 
   async function sumbit() {
-    const sub = await submition(chosenGovt, cities, citiesIndex, locIndex, user.uid);
+    const sub = await submition(
+      chosenGovt,
+      cities,
+      citiesIndex,
+      locIndex,
+      user.uid
+    );
     setFlag(sub.flag);
     setPartName(sub.partName);
     setSlotIndex(sub.slotNum);
@@ -58,8 +88,8 @@ const Homepage = ({ user, navigation }) => {
   }
 
   async function addToHistory(part, slot, flag) {
-    console.log('Values', partName, slotIndex);
-    console.log('flag', flag);
+    console.log("Values", partName, slotIndex);
+    console.log("flag", flag);
     if (flag == true) {
       addToUserHistory(
         user.uid,
@@ -68,7 +98,7 @@ const Homepage = ({ user, navigation }) => {
         chosenLoc,
         part,
         slot,
-        await getURL(chosenGovt, chosenCt, chosenLoc),
+        await getURL(chosenGovt, chosenCt, chosenLoc)
       );
     }
   }
@@ -88,13 +118,16 @@ const Homepage = ({ user, navigation }) => {
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Icon
-                name="check"
-                size={30}
-                color='#3ded97'
-              />
-              <Text style={{ color: '#3ded97', fontSize: 20, fontWeight: 'bold' }}>Booked successfully!</Text>
-              <Text style={{ fontSize: 16 }}>Your booked place is {partName}{slotIndex}</Text>
+              <Icon name="check" size={30} color="#3ded97" />
+              <Text
+                style={{ color: "#3ded97", fontSize: 20, fontWeight: "bold" }}
+              >
+                Booked successfully!
+              </Text>
+              <Text style={{ fontSize: 16 }}>
+                Your booked place is {partName}
+                {slotIndex}
+              </Text>
               <View style={{ paddingTop: 20 }}>
                 <Icon.Button
                   name="check"
@@ -103,10 +136,10 @@ const Homepage = ({ user, navigation }) => {
                     setChosenCt("");
                     setChosenLoc("");
                     setModalVisible(!modalVisible);
-                    navigation.navigate('Your Places');
+                    navigation.navigate("Your Places");
                   }}
                   borderRadius={40}
-                  backgroundColor={'#3ded97'}
+                  backgroundColor={"#3ded97"}
                 >
                   <Text>Done</Text>
                 </Icon.Button>
@@ -114,7 +147,7 @@ const Homepage = ({ user, navigation }) => {
             </View>
           </View>
         </Modal>
-      )
+      );
     }
     if (flag == false) {
       return (
@@ -128,13 +161,13 @@ const Homepage = ({ user, navigation }) => {
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-            <Icon
-                name="remove"
-                size={30}
-                color='#f00'
-              />
-              <Text style={{ color: '#f00', fontSize: 20, fontWeight: 'bold' }}>Booking failed!</Text>
-              <Text style={{ fontSize: 16 }}>Try again later or choose a different location</Text>
+              <Icon name="remove" size={30} color="#f00" />
+              <Text style={{ color: "#f00", fontSize: 20, fontWeight: "bold" }}>
+                Booking failed!
+              </Text>
+              <Text style={{ fontSize: 16 }}>
+                Try again later or choose a different location
+              </Text>
               <View style={{ paddingTop: 20 }}>
                 <Icon.Button
                   name="remove"
@@ -143,7 +176,7 @@ const Homepage = ({ user, navigation }) => {
                     setChosenLoc("");
                   }}
                   borderRadius={40}
-                  backgroundColor={'#ff5c5c'}
+                  backgroundColor={"#ff5c5c"}
                 >
                   <Text>Close</Text>
                 </Icon.Button>
@@ -151,12 +184,12 @@ const Homepage = ({ user, navigation }) => {
             </View>
           </View>
         </Modal>
-      )
+      );
     }
   }
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [flag, setFlag] = useState(null)
+  const [flag, setFlag] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [govts, setGovts] = useState([]);
   const [chosenGovt, setChosenGovt] = useState("");
@@ -171,10 +204,12 @@ const Homepage = ({ user, navigation }) => {
   const [url, setUrl] = useState("");
 
   return (
-    <View style={{ flex: 1, padding: 30, backgroundColor: '#151e3d' }}>
+    <View style={{ flex: 1, padding: 30, backgroundColor: "#151e3d" }}>
       {flag != null ? <FinalModal /> : null}
       <Text style={styles.welcome}>Hi, {firstName}</Text>
-      <Text style={{ fontSize: 20, paddingBottom: 5, color: '#fff' }}>Start your booking</Text>
+      <Text style={{ fontSize: 20, paddingBottom: 5, color: "#fff" }}>
+        Start your booking
+      </Text>
       <View style={styles.pckView}>
         <Text style={styles.textStyle}>Choose a government:</Text>
         <Picker
@@ -184,7 +219,7 @@ const Homepage = ({ user, navigation }) => {
             updateCitiesList(govt);
           }}
           style={styles.pck}
-          mode='dropdown'
+          mode="dropdown"
         >
           <Picker.Item label="Nothing selected" value={""} />
           {govts.map((e, index) => {
@@ -202,19 +237,19 @@ const Homepage = ({ user, navigation }) => {
             setCitiesIndex(index - 1);
           }}
           style={styles.pck}
-          mode='dropdown'
+          mode="dropdown"
         >
           <Picker.Item label="Nothing selected" value={""} />
           {cities && cities.length
             ? cities.map((e, index) => {
-              return (
-                <Picker.Item
-                  label={e.cityName}
-                  value={e.cityName}
-                  key={index}
-                />
-              );
-            })
+                return (
+                  <Picker.Item
+                    label={e.cityName}
+                    value={e.cityName}
+                    key={index}
+                  />
+                );
+              })
             : null}
         </Picker>
       </View>
@@ -227,19 +262,19 @@ const Homepage = ({ user, navigation }) => {
             setLocIndex(index - 1);
           }}
           style={styles.pck}
-          mode='dropdown'
+          mode="dropdown"
         >
           <Picker.Item label="Nothing selected" value={""} />
           {locations && locations.length
             ? locations.map((e, index) => {
-              return (
-                <Picker.Item
-                  label={e.locationName}
-                  value={e.locationName}
-                  key={index}
-                />
-              );
-            })
+                return (
+                  <Picker.Item
+                    label={e.locationName}
+                    value={e.locationName}
+                    key={index}
+                  />
+                );
+              })
             : null}
         </Picker>
       </View>
@@ -254,7 +289,11 @@ const Homepage = ({ user, navigation }) => {
                 );
               } else {
                 const submValues = await sumbit();
-                addToHistory(submValues.partName, submValues.slotNum, submValues.flag);
+                addToHistory(
+                  submValues.partName,
+                  submValues.slotNum,
+                  submValues.flag
+                );
                 setModalVisible(true);
               }
             }}
@@ -285,7 +324,7 @@ const styles = StyleSheet.create({
   textStyle: {
     fontSize: 16,
     paddingVertical: 5,
-    color: '#fff'
+    color: "#fff",
   },
   pckView: {
     paddingBottom: 10,
@@ -294,13 +333,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     paddingBottom: 10,
-    color: '#fff'
+    color: "#fff",
   },
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22
+    marginTop: 22,
   },
   modalView: {
     margin: 20,
@@ -311,10 +350,10 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
-})
+});
