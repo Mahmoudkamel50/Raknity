@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Icon from "react-native-vector-icons/FontAwesome";
 import { editprofile } from '../dataBase/user';
 
-const EditProfile = ({ route }) => {
+const EditProfile = ({ route , navigation}) => {
     const {id, firstName, lastName, phone } = route.params;
 
     const [fName, setFName] = useState(firstName);
@@ -51,6 +51,7 @@ const EditProfile = ({ route }) => {
                     backgroundColor={'#3ded97'}
                     onPress={() => {
                         editInfo();
+                        navigation.goBack();
                     }}
                     size={30}
                 >

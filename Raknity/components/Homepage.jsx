@@ -99,6 +99,9 @@ const Homepage = ({ user, navigation }) => {
                 <Icon.Button
                   name="check"
                   onPress={() => {
+                    setChosenGovt("");
+                    setChosenCt("");
+                    setChosenLoc("");
                     setModalVisible(!modalVisible);
                     navigation.navigate('Your Places');
                   }}
