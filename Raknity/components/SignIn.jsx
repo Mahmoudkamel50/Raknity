@@ -28,9 +28,8 @@ const SignIn = ({ navigation }) => {
         <View style={styles.textInput}>
           <TextInput
             placeholder="Enter your email"
-            placeholderTextColor={'#d3d3d3'}
             textAlign="center"
-            style={{ fontSize: 17, color: '#fff' }}
+            style={{ fontSize: 17, }}
             keyboardType="email-address"
             onChangeText={setEmail}
             value={email}
@@ -42,9 +41,8 @@ const SignIn = ({ navigation }) => {
         <View style={styles.textInput}>
           <TextInput
             placeholder="Enter your password"
-            placeholderTextColor={'#d3d3d3'}
             textAlign="center"
-            style={{ fontSize: 17, color: '#fff' }}
+            style={{ fontSize: 17,}}
             onChangeText={setPassword}
             value={password}
             secureTextEntry={true}
@@ -96,7 +94,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    backgroundColor: "#151e3d",
+    backgroundColor: "#d3d3d3",
     borderRadius: 40,
     padding: 5,
   },
