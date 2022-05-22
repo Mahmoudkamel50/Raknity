@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Icon from "react-native-vector-icons/FontAwesome";
 import { logout } from '../dataBase/authorization';
+import { StatusBar } from 'expo-status-bar';
 
 const Banned = () => {
   return (
@@ -22,6 +23,7 @@ const Banned = () => {
             <Text>Log out</Text>
           </Icon.Button>
         </View>
+        <StatusBar style='light'/>
     </View>
   )
 }
