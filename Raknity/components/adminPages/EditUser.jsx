@@ -13,7 +13,7 @@ const EditUser = () => {
 
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row", padding: 10 }}>
         <Text style={{ fontSize: 16, color: "#fff", padding: 10 }}>
           Enter user email:
         </Text>
@@ -25,7 +25,7 @@ const EditUser = () => {
           textAlign={"center"}
         />
       </View>
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row", padding: 10 }}>
         <Text style={{ fontSize: 16, color: "#fff", padding: 10 }}>
           Enter user wallet:
         </Text>
