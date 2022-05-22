@@ -84,19 +84,36 @@ export default function CheckInQrScanner({ navigation }) {
                                 <Text style={{ fontSize: 16, padding: 5, }}>Your email: {email}</Text>
                             </View>
                             : null}
-                        <View style={styles.btview}>
-                            <Icon.Button
-                                name='check'
-                                backgroundColor={'#3ded97'}
-                                borderRadius={40}
-                                onPress={() => {
-                                    checkIn();
-                                    navigation.navigate("Welcome");
-                                    setModalVisible(false);
-                                }}
-                            >
-                                <Text>Confirm</Text>
-                            </Icon.Button>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <View style={styles.btview}>
+                                <Icon.Button
+                                    name='remove'
+                                    backgroundColor={'#f00'}
+                                    borderRadius={40}
+                                    onPress={() => {
+                                        setScanned(false);
+                                        setName("");
+                                        setEmail("");
+                                        setModalVisible(false);
+                                    }}
+                                >
+                                    <Text>It's not me</Text>
+                                </Icon.Button>
+                            </View>
+                            <View style={styles.btview}>
+                                <Icon.Button
+                                    name='check'
+                                    backgroundColor={'#3ded97'}
+                                    borderRadius={40}
+                                    onPress={() => {
+                                        checkIn();
+                                        navigation.navigate("Welcome");
+                                        setModalVisible(false);
+                                    }}
+                                >
+                                    <Text>Confirm</Text>
+                                </Icon.Button>
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -114,6 +131,7 @@ const styles = StyleSheet.create({
     },
     btview: {
         paddingTop: 20,
+        paddingHorizontal: 5,
     },
     camView: {
         width: '85%',
