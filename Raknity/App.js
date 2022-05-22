@@ -33,45 +33,65 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = subscribe(({ change, snapshot }) => {
-      if (change.type === "added") {
-        if (user) {
-          setUserEmail(JSON.stringify(user.email));
-          getUserById(user.uid).then((data) => {
-            console.log(user.uid);
-            console.log(data);
-            setRole(data[0].role);
-            setBanned(data[0].banned);
-          })
+    if (user != undefined) {
+      const unsubscribe = subscribe(({ change, snapshot }) => {
+        if (change.type === "added") {
+          const unsub = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+            if (user) {
+              setUserEmail(JSON.stringify(user.email));
+              getUserById(user.uid).then((data) => {
+                console.log(user.uid);
+                console.log(data);
+                setRole(data[0].role);
+                setBanned(data[0].banned);
+              })
+            }
+          });
+          return () => {
+            unsub();
+          };
         }
-      }
-      if (change.type === "modified") {
-        if (user) {
-          setUserEmail(JSON.stringify(user.email));
-          getUserById(user.uid).then((data) => {
-            console.log(user.uid);
-            console.log(data);
-            setRole(data[0].role);
-            setBanned(data[0].banned);
-          })
+        if (change.type === "modified") {
+          const unsub = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+            if (user) {
+              setUserEmail(JSON.stringify(user.email));
+              getUserById(user.uid).then((data) => {
+                console.log(user.uid);
+                console.log(data);
+                setRole(data[0].role);
+                setBanned(data[0].banned);
+              })
+            }
+          });
+          return () => {
+            unsub();
+          };
         }
-      }
-      if (change.type === "removed") {
-        if (user) {
-          setUserEmail(JSON.stringify(user.email));
-          getUserById(user.uid).then((data) => {
-            console.log(user.uid);
-            console.log(data);
-            setRole(data[0].role);
-            setBanned(data[0].banned);
-          })
+        if (change.type === "removed") {
+          const unsub = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+            if (user) {
+              setUserEmail(JSON.stringify(user.email));
+              getUserById(user.uid).then((data) => {
+                console.log(user.uid);
+                console.log(data);
+                setRole(data[0].role);
+                setBanned(data[0].banned);
+              })
+            }
+          });
+          return () => {
+            unsub();
+          };
         }
-      }
-    });
+      });
 
-    return () => {
-      unsubscribe();
-    };
+      return () => {
+        unsubscribe();
+      };
+    }
   }, []);
 
   const [user, setUser] = useState(undefined)
