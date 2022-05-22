@@ -10,9 +10,7 @@ import CheckInStack from "./components/Stacks/CheckInStack";
 import CheckOutStack from "./components/Stacks/CheckOutStack";
 import AdminStack from "./components/Stacks/AdminStack";
 import Banned from "./components/Banned";
-
-
-
+import { subscribe } from "./dataBase/APIFunctions";
 
 export default function App() {
 
@@ -29,11 +27,41 @@ export default function App() {
         })
       }
     });
-
-
-
     return () => {
       unsub();
+    };
+  }, []);
+  
+  useEffect(() => {
+    const unsubscribe = subscribe(({ change, snapshot }) => {
+      if (change.type === "added") {
+        getUserById(user.uid).then((data) => {
+          console.log(user.uid);
+          console.log(data);
+          setRole(data[0].role);
+          setBanned(data[0].banned);
+        })
+      }
+      if (change.type === "modified") {
+        getUserById(user.uid).then((data) => {
+          console.log(user.uid);
+          console.log(data);
+          setRole(data[0].role);
+          setBanned(data[0].banned);
+        })
+      }
+      if (change.type === "removed") {
+        getUserById(user.uid).then((data) => {
+          console.log(user.uid);
+          console.log(data);
+          setRole(data[0].role);
+          setBanned(data[0].banned);
+        })
+      }
+    });
+
+    return () => {
+      unsubscribe();
     };
   }, []);
 
