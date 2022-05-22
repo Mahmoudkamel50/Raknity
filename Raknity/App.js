@@ -31,32 +31,41 @@ export default function App() {
       unsub();
     };
   }, []);
-  
+
   useEffect(() => {
     const unsubscribe = subscribe(({ change, snapshot }) => {
       if (change.type === "added") {
-        getUserById(user.uid).then((data) => {
-          console.log(user.uid);
-          console.log(data);
-          setRole(data[0].role);
-          setBanned(data[0].banned);
-        })
+        if (user) {
+          setUserEmail(JSON.stringify(user.email));
+          getUserById(user.uid).then((data) => {
+            console.log(user.uid);
+            console.log(data);
+            setRole(data[0].role);
+            setBanned(data[0].banned);
+          })
+        }
       }
       if (change.type === "modified") {
-        getUserById(user.uid).then((data) => {
-          console.log(user.uid);
-          console.log(data);
-          setRole(data[0].role);
-          setBanned(data[0].banned);
-        })
+        if (user) {
+          setUserEmail(JSON.stringify(user.email));
+          getUserById(user.uid).then((data) => {
+            console.log(user.uid);
+            console.log(data);
+            setRole(data[0].role);
+            setBanned(data[0].banned);
+          })
+        }
       }
       if (change.type === "removed") {
-        getUserById(user.uid).then((data) => {
-          console.log(user.uid);
-          console.log(data);
-          setRole(data[0].role);
-          setBanned(data[0].banned);
-        })
+        if (user) {
+          setUserEmail(JSON.stringify(user.email));
+          getUserById(user.uid).then((data) => {
+            console.log(user.uid);
+            console.log(data);
+            setRole(data[0].role);
+            setBanned(data[0].banned);
+          })
+        }
       }
     });
 
