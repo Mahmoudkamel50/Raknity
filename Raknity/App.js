@@ -5,6 +5,11 @@ import AuthorizationStack from "./components/Stacks/AuthorizationStack";
 import AppPages from "./components/Stacks/AppPages";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./dataBase/configuration";
+import { getUserById } from "./dataBase/user";
+import CheckInStack from "./components/Stacks/CheckInStack";
+import CheckOutStack from "./components/Stacks/CheckOutStack";
+import AdminStack from "./components/Stacks/AdminStack";
+import Banned from "./components/Banned";
 
 
 
@@ -16,8 +21,16 @@ export default function App() {
       setUser(user);
       if (user) {
         setUserEmail(JSON.stringify(user.email));
+        getUserById(user.uid).then((data) => {
+          console.log(user.uid);
+          console.log(data);
+          setRole(data[0].role);
+          setBanned(data[0].banned);
+        })
       }
     });
+
+
 
     return () => {
       unsub();
@@ -26,17 +39,41 @@ export default function App() {
 
   const [user, setUser] = useState(undefined)
   const [userEmail, setUserEmail] = useState("");
+  const [role, setRole] = useState("");
+  const [banned, setBanned] = useState(null);
 
-      if(user){
-        return(
-         <AppPages user={user}/>
-        );
-      }
-      else{
-        return(
-        <AuthorizationStack/>
-        )
-      }
+  if (user && role == 'user' && banned == false) {
+    return (
+      <AppPages user={user} />
+    );
+  }
+  if (user && role == 'user' && banned == true) {
+    return (
+      <Banned />
+    )
+  }
+  if (user && role == 'pCheckIn') {
+    return (
+      <CheckInStack />
+    )
+  }
+  if (user && role == 'pCheckOut') {
+    console.log(role);
+    return (
+      <CheckOutStack />
+    )
+  }
+  if (user && role == 'admin') {
+    console.log(role);
+    return (
+      <AdminStack />
+    )
+  }
+  else {
+    return (
+      <AuthorizationStack />
+    )
+  }
 
 }
 

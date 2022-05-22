@@ -45,6 +45,20 @@ async function getCityLocations(id, cityName) {
   return wantedData;
 }
 
+async function getURL(id, cityName, location) {
+  const allLocs = await getCityLocations(id, cityName);
+  const cityLocs = allLocs.locations;
+  let wantedData;
+  for (let i = 0; i < cityLocs.length; i++) {
+    if (cityLocs[i].locationName == location) {
+      wantedData = cityLocs[i].url;
+      break;
+    }
+  }
+  console.log(wantedData);
+  return wantedData;
+}
+
 async function getlocpartitions(id, cityName, locationName) {
   const allLocs = await getCityLocations(id, cityName);
   const locList = allLocs.locations;
@@ -71,37 +85,54 @@ async function getAllSlots(id, cityName, locationName, partitionName) {
   return wantedData;
 }
 
-async function submition(
-  id,
-  citiesList,
-  cityindex,
-  locindex,
-  partindex,
-  slotindex
-) {
+async function submition(id, citiesList, cityindex, locindex, userId) {
   try {
-    citiesList[cityindex].locations[locindex].partitions[partindex].slots[
-      slotindex
-    ] = true;
-    const docRef = doc(db, "locations", id);
-    await updateDoc(docRef, {
-      cities: citiesList,
-    }).then(console.log("slot updated!"));
+    let flag = false;
+    let partName;
+    let slotNum;
+    for (
+      let i = 0;
+      i < citiesList[cityindex].locations[locindex].partitions.length;
+      i++
+    ) {
+      for (
+        let j = 0;
+        j <
+        citiesList[cityindex].locations[locindex].partitions[i].slots.length;
+        j++
+      ) {
+        if (
+          citiesList[cityindex].locations[locindex].partitions[i].slots[j]
+            .status == "empty"
+        ) {
+          citiesList[cityindex].locations[locindex].partitions[i].slots[
+            j
+          ].status = "pending";
+          citiesList[cityindex].locations[locindex].partitions[i].slots[
+            j
+          ].occupiedBy = userId;
+          partName =
+            citiesList[cityindex].locations[locindex].partitions[i]
+              .partitionName;
+          slotNum = j;
+          flag = true;
+          break;
+        }
+      }
+      if (flag == true) {
+        break;
+      }
+    }
+    if (flag == true) {
+      const docRef = doc(db, "locations", id);
+      await updateDoc(docRef, {
+        cities: citiesList,
+      });
+    }
+    return { flag, partName, slotNum };
   } catch (e) {
     console.error(e);
   }
-}
-
-async function checkIn(id, index) {
-  const user = await getUserById(id);
-  const history = user[0].history;
-
-  history[index].status = "Checked In";
-
-  const docRef = doc(db, "users", id);
-  await updateDoc(docRef, {
-    history: history,
-  });
 }
 
 function subscribe(callback) {
@@ -112,55 +143,6 @@ function subscribe(callback) {
     });
   });
   return unsubscribe;
-}
-
-async function checkout(
-  id,
-  histindex,
-  govt,
-  cityname,
-  locname,
-  partname,
-  slotindex
-) {
-  try {
-    const user = await getUserById(id);
-    const history = user[0].history;
-    history[histindex].status = "Checked out";
-    const docRef = doc(db, "users", id);
-    await updateDoc(docRef, {
-      history: history,
-    });
-    const gov = await getGovCities(govt);
-    for (let i = 0; i < gov.cities.length; i++) {
-      if (gov.cities[i].cityName == cityname) {
-        for (let j = 0; j < gov.cities[i].locations.length; j++) {
-          if (gov.cities[i].locations[j].locationName == locname) {
-            for (
-              let k = 0;
-              k < gov.cities[i].locations[j].partitions.length;
-              k++
-            ) {
-              if (
-                gov.cities[i].locations[j].partitions[k].partitionName ==
-                partname
-              ) {
-                gov.cities[i].locations[j].partitions[k].slots[
-                  slotindex
-                ] = false;
-              }
-            }
-          }
-        }
-      }
-    }
-    const locRef = doc(db, "locations", govt);
-    await updateDoc(locRef, {
-      cities: gov.cities,
-    });
-  } catch (e) {
-    console.error(e);
-  }
 }
 
 async function cancel(
@@ -175,7 +157,7 @@ async function cancel(
   try {
     const user = await getUserById(id);
     const history = user[0].history;
-    history[histindex].status = "Cancel";
+    history[histindex].status = "Cancelled";
     const docRef = doc(db, "users", id);
     await updateDoc(docRef, {
       history: history,
@@ -196,7 +178,10 @@ async function cancel(
               ) {
                 gov.cities[i].locations[j].partitions[k].slots[
                   slotindex
-                ] = false;
+                ].status = "empty";
+                gov.cities[i].locations[j].partitions[k].slots[
+                  slotindex
+                ].occupiedBy = "";
               }
             }
           }
@@ -229,6 +214,261 @@ async function deductFromWallet(id, timeDiff, wallet) {
   }
 }
 
+async function checkinslotbyId(id) {
+  try {
+    let flag = false;
+    const govs = await getGovts();
+    let govId;
+    let citieslist;
+
+    for (let i = 0; i < govs.length; i++) {
+      for (let j = 0; j < govs[i].cities.length; j++) {
+        for (let k = 0; k < govs[i].cities[j].locations.length; k++) {
+          for (
+            let l = 0;
+            l < govs[i].cities[j].locations[k].partitions.length;
+            l++
+          ) {
+            for (
+              let m = 0;
+              m < govs[i].cities[j].locations[k].partitions[l].slots.length;
+              m++
+            ) {
+              if (
+                govs[i].cities[j].locations[k].partitions[l].slots[m]
+                  .occupiedBy == id
+              ) {
+                govs[i].cities[j].locations[k].partitions[l].slots[m].status =
+                  "Checked In";
+                flag = true;
+                govId = govs[i].id;
+                citieslist = govs[i].cities;
+                break;
+              }
+            }
+            if (flag == true) {
+              break;
+            }
+          }
+          if (flag == true) {
+            break;
+          }
+        }
+        if (flag == true) {
+          break;
+        }
+      }
+      if (flag == true) {
+        break;
+      }
+    }
+
+    const docRef = doc(db, "locations", govId);
+    await updateDoc(docRef, {
+      cities: citieslist,
+    });
+
+    const user = await getUserById(id);
+    const history = user[0].history;
+    history[history.length - 1].status = "Checked In";
+    history[history.length - 1].checkInTime = new Date();
+    console.log(history.length - 1);
+    const userRef = doc(db, "users", id);
+    await updateDoc(userRef, {
+      history: history,
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function checkoutslotbyId(id) {
+  try {
+    let flag = false;
+    const govs = await getGovts();
+    let govId;
+    let citieslist;
+
+    for (let i = 0; i < govs.length; i++) {
+      for (let j = 0; j < govs[i].cities.length; j++) {
+        for (let k = 0; k < govs[i].cities[j].locations.length; k++) {
+          for (
+            let l = 0;
+            l < govs[i].cities[j].locations[k].partitions.length;
+            l++
+          ) {
+            for (
+              let m = 0;
+              m < govs[i].cities[j].locations[k].partitions[l].slots.length;
+              m++
+            ) {
+              if (
+                govs[i].cities[j].locations[k].partitions[l].slots[m]
+                  .occupiedBy == id
+              ) {
+                govs[i].cities[j].locations[k].partitions[l].slots[m].status =
+                  "empty";
+                govs[i].cities[j].locations[k].partitions[l].slots[
+                  m
+                ].occupiedBy = "";
+                flag = true;
+                govId = govs[i].id;
+                citieslist = govs[i].cities;
+                break;
+              }
+            }
+            if (flag == true) {
+              break;
+            }
+          }
+          if (flag == true) {
+            break;
+          }
+        }
+        if (flag == true) {
+          break;
+        }
+      }
+      if (flag == true) {
+        break;
+      }
+    }
+    console.log(id);
+    const docRef = doc(db, "locations", govId);
+    await updateDoc(docRef, {
+      cities: citieslist,
+    });
+
+    const user = await getUserById(id);
+    const history = user[0].history;
+    history[history.length - 1].status = "Checked out";
+    const checkInTime = history[history.length - 1].checkInTime.toDate();
+    const checkOutTime = new Date();
+    const timeDiffSec =
+      checkOutTime.getTime() / 1000 -
+      history[history.length - 1].checkInTime.seconds;
+    const timeDiffMin = (timeDiffSec / 60).toFixed(3);
+    const payment = ((10 / 60) * timeDiffMin).toFixed(3);
+    const newWallet = user[0].wallet - payment;
+    const userRef = doc(db, "users", id);
+
+    await updateDoc(userRef, {
+      wallet: newWallet.toFixed(3),
+      history: history,
+    });
+    return { checkInTime, checkOutTime, timeDiffMin, payment };
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function pendingSlots() {
+  try {
+    const govs = await getGovts();
+    let slots = [];
+
+    for (let i = 0; i < govs.length; i++) {
+      for (let j = 0; j < govs[i].cities.length; j++) {
+        for (let k = 0; k < govs[i].cities[j].locations.length; k++) {
+          for (
+            let l = 0;
+            l < govs[i].cities[j].locations[k].partitions.length;
+            l++
+          ) {
+            for (
+              let m = 0;
+              m < govs[i].cities[j].locations[k].partitions[l].slots.length;
+              m++
+            ) {
+              if (
+                govs[i].cities[j].locations[k].partitions[l].slots[m].status ==
+                "pending"
+              ) {
+                slots.push(
+                  govs[i].cities[j].locations[k].partitions[l].slots[m]
+                );
+              }
+            }
+          }
+        }
+      }
+    }
+    console.log('slots', slots)
+    return slots;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function adminCancelBooking(id) {
+  try {
+    let flag = false;
+    const govs = await getGovts();
+    let govId;
+    let citieslist;
+
+    for (let i = 0; i < govs.length; i++) {
+      for (let j = 0; j < govs[i].cities.length; j++) {
+        for (let k = 0; k < govs[i].cities[j].locations.length; k++) {
+          for (
+            let l = 0;
+            l < govs[i].cities[j].locations[k].partitions.length;
+            l++
+          ) {
+            for (
+              let m = 0;
+              m < govs[i].cities[j].locations[k].partitions[l].slots.length;
+              m++
+            ) {
+              if (
+                govs[i].cities[j].locations[k].partitions[l].slots[m]
+                  .occupiedBy == id
+              ) {
+                govs[i].cities[j].locations[k].partitions[l].slots[m].status =
+                  "empty";
+                govs[i].cities[j].locations[k].partitions[l].slots[
+                  m
+                ].occupiedBy = "";
+                flag = true;
+                govId = govs[i].id;
+                citieslist = govs[i].cities;
+                break;
+              }
+            }
+            if (flag == true) {
+              break;
+            }
+          }
+          if (flag == true) {
+            break;
+          }
+        }
+        if (flag == true) {
+          break;
+        }
+      }
+      if (flag == true) {
+        break;
+      }
+    }
+    console.log(id);
+    const docRef = doc(db, "locations", govId);
+    await updateDoc(docRef, {
+      cities: citieslist,
+    });
+
+    const user = await getUserById(id);
+    const history = user[0].history;
+    history[history.length - 1].status = "Cancelled";
+    const userRef = doc(db, "users", id);
+    await updateDoc(userRef, {
+      history: history,
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export {
   getGovts,
   getGovCities,
@@ -236,9 +476,12 @@ export {
   getlocpartitions,
   getAllSlots,
   submition,
-  checkIn,
   subscribe,
-  checkout,
   deductFromWallet,
   cancel,
+  getURL,
+  checkinslotbyId,
+  checkoutslotbyId,
+  pendingSlots,
+  adminCancelBooking
 };

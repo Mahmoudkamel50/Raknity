@@ -1,12 +1,11 @@
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, Button, StyleSheet, Modal } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   getGovts,
   getGovCities,
   getCityLocations,
-  getlocpartitions,
-  getAllSlots,
   submition,
+  getURL,
 } from "../dataBase/APIFunctions";
 import { Picker } from "@react-native-picker/picker";
 import {
@@ -50,47 +49,111 @@ const Homepage = ({ user, navigation }) => {
     }
   }
 
-  function updatePartitionsList(id, ctName, locName) {
-    if (locName != "") {
-      getlocpartitions(id, ctName, locName).then((data) => {
-        setPartitions(data.partitions);
-        setUrl(data.url);
-        data.partitions.map((e) => {
-          console.log(e.partitionName);
-        });
-      });
+  async function sumbit() {
+    const sub = await submition(chosenGovt, cities, citiesIndex, locIndex, user.uid);
+    setFlag(sub.flag);
+    setPartName(sub.partName);
+    setSlotIndex(sub.slotNum);
+    return sub;
+  }
+
+  async function addToHistory(part, slot, flag) {
+    console.log('Values', partName, slotIndex);
+    console.log('flag', flag);
+    if (flag == true) {
+      addToUserHistory(
+        user.uid,
+        chosenGovt,
+        chosenCt,
+        chosenLoc,
+        part,
+        slot,
+        await getURL(chosenGovt, chosenCt, chosenLoc),
+      );
     }
   }
 
-  function updateSlotList(id, ctName, locName, partName) {
-    if (partName != "") {
-      console.log("here in update slot list method");
-      getAllSlots(id, ctName, locName, partName).then((data) => {
-        setSlots(data.slots);
-        console.log(data.slots);
-        data.slots.map((e) => {
-          console.log(e);
-        });
-      });
+  function FinalModal() {
+    console.log(flag);
+    if (flag == true) {
+      console.log(flag);
+      return (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Icon
+                name="check"
+                size={30}
+                color='#3ded97'
+              />
+              <Text style={{ color: '#3ded97', fontSize: 20, fontWeight: 'bold' }}>Booked successfully!</Text>
+              <Text style={{ fontSize: 16 }}>Your booked place is {partName}{slotIndex}</Text>
+              <View style={{ paddingTop: 20 }}>
+                <Icon.Button
+                  name="check"
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                    navigation.navigate('Your Places');
+                  }}
+                  borderRadius={40}
+                  backgroundColor={'#3ded97'}
+                >
+                  <Text>Done</Text>
+                </Icon.Button>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )
+    }
+    if (flag == false) {
+      return (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+            <Icon
+                name="remove"
+                size={30}
+                color='#f00'
+              />
+              <Text style={{ color: '#f00', fontSize: 20, fontWeight: 'bold' }}>Booking failed!</Text>
+              <Text style={{ fontSize: 16 }}>Try again later or choose a different location</Text>
+              <View style={{ paddingTop: 20 }}>
+                <Icon.Button
+                  name="remove"
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                    setChosenLoc("");
+                  }}
+                  borderRadius={40}
+                  backgroundColor={'#ff5c5c'}
+                >
+                  <Text>Close</Text>
+                </Icon.Button>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )
     }
   }
 
-  function sumbit() {
-    submition(chosenGovt, cities, citiesIndex, locIndex, partIndex, slotIndex);
-  }
-
-  function addToHistory() {
-    addToUserHistory(
-      user.uid,
-      chosenGovt,
-      chosenCt,
-      chosenLoc,
-      chosenPart,
-      slotIndex,
-      url
-    );
-  }
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [flag, setFlag] = useState(null)
   const [firstName, setFirstName] = useState("");
   const [govts, setGovts] = useState([]);
   const [chosenGovt, setChosenGovt] = useState("");
@@ -98,19 +161,15 @@ const Homepage = ({ user, navigation }) => {
   const [chosenCt, setChosenCt] = useState("");
   const [locations, setLocations] = useState([]);
   const [chosenLoc, setChosenLoc] = useState("");
-  const [partitions, setPartitions] = useState([]);
-  const [chosenPart, setChosenPart] = useState("");
-  const [slots, setSlots] = useState([]);
-  const [chosenSlot, setChosenSlot] = useState("");
+  const [partName, setPartName] = useState("");
   const [slotIndex, setSlotIndex] = useState("");
   const [citiesIndex, setCitiesIndex] = useState("");
   const [locIndex, setLocIndex] = useState("");
-  const [partIndex, setPartIndex] = useState("");
   const [url, setUrl] = useState("");
-  
+
   return (
     <View style={{ flex: 1, padding: 30, backgroundColor: '#151e3d' }}>
-
+      {flag != null ? <FinalModal /> : null}
       <Text style={styles.welcome}>Hi, {firstName}</Text>
       <Text style={{ fontSize: 20, paddingBottom: 5, color: '#fff' }}>Start your booking</Text>
       <View style={styles.pckView}>
@@ -145,14 +204,14 @@ const Homepage = ({ user, navigation }) => {
           <Picker.Item label="Nothing selected" value={""} />
           {cities && cities.length
             ? cities.map((e, index) => {
-                return (
-                  <Picker.Item
-                    label={e.cityName}
-                    value={e.cityName}
-                    key={index}
-                  />
-                );
-              })
+              return (
+                <Picker.Item
+                  label={e.cityName}
+                  value={e.cityName}
+                  key={index}
+                />
+              );
+            })
             : null}
         </Picker>
       </View>
@@ -160,9 +219,8 @@ const Homepage = ({ user, navigation }) => {
         <Text style={styles.textStyle}>Choose location:</Text>
         <Picker
           selectedValue={chosenLoc}
-          onValueChange={(loc, index) => {
+          onValueChange={async (loc, index) => {
             setChosenLoc(loc);
-            updatePartitionsList(chosenGovt, chosenCt, loc);
             setLocIndex(index - 1);
           }}
           style={styles.pck}
@@ -171,63 +229,15 @@ const Homepage = ({ user, navigation }) => {
           <Picker.Item label="Nothing selected" value={""} />
           {locations && locations.length
             ? locations.map((e, index) => {
-                return (
-                  <Picker.Item
-                    label={e.locationName}
-                    value={e.locationName}
-                    key={index}
-                  />
-                );
-              })
+              return (
+                <Picker.Item
+                  label={e.locationName}
+                  value={e.locationName}
+                  key={index}
+                />
+              );
+            })
             : null}
-        </Picker>
-      </View>
-      <View style={styles.pckView}>
-        <Text style={styles.textStyle}>Choose a Partition:</Text>
-        <Picker
-          selectedValue={chosenPart}
-          onValueChange={(part, index) => {
-            setChosenPart(part);
-            updateSlotList(chosenGovt, chosenCt, chosenLoc, part);
-            setPartIndex(index - 1);
-          }}
-          style={styles.pck}
-          mode='dropdown'
-        >
-          <Picker.Item label="Nothing selected" value={""} />
-          {partitions && partitions.length
-            ? partitions.map((e, index) => {
-                return (
-                  <Picker.Item
-                    label={e.partitionName}
-                    value={e.partitionName}
-                    key={index}
-                  />
-                );
-              })
-            : null}
-        </Picker>
-      </View>
-      <View style={styles.pckView}>
-        <Text style={styles.textStyle}>Choose parking slot:</Text>
-        <Picker
-          selectedValue={chosenSlot}
-          onValueChange={(slot, index) => {
-            setChosenSlot(slot);
-            setSlotIndex(index - 1);
-          }}
-          style={styles.pck}
-          mode='dropdown'
-        >
-          <Picker.Item label="Nothing selected" value={""} />
-          {slots.length != 0 &&
-            slots.map((e, idx) => {
-              if (e == false) {
-                return <Picker.Item label={`${idx}`} value={idx} key={idx} />;
-              } else {
-                return <Picker.Item label={`${idx} occupied`} value={""} key={idx} />;
-              }
-            })}
         </Picker>
       </View>
       <View>
@@ -240,9 +250,9 @@ const Homepage = ({ user, navigation }) => {
                   "You have pending bookings or you haven't checked out. Check 'Your Places' page"
                 );
               } else {
-                sumbit();
-                addToHistory();
-                navigation.navigate('Your Places');
+                const submValues = await sumbit();
+                addToHistory(submValues.partName, submValues.slotNum, submValues.flag);
+                setModalVisible(true);
               }
             }}
             backgroundColor={"#3ded97"}
@@ -252,7 +262,7 @@ const Homepage = ({ user, navigation }) => {
           </Icon.Button>
         </View>
       </View>
-      <StatusBar style="light"/>
+      <StatusBar style="light" />
     </View>
   );
 };
@@ -282,5 +292,26 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingBottom: 10,
     color: '#fff'
-  }
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
 })

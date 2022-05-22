@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, Button } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Modal } from "react-native";
 import React, { useEffect, useState } from "react";
 import { getUserHistory } from "../dataBase/user";
 import * as WebBrowser from "expo-web-browser";
@@ -10,6 +10,7 @@ import {
   deductFromWallet,
   cancel,
 } from "../dataBase/APIFunctions";
+import QRCode from "react-native-qrcode-svg";
 
 const YourPlaces = ({ user }) => {
   useEffect(() => {
@@ -47,10 +48,41 @@ const YourPlaces = ({ user }) => {
   }
 
   const [history, setHistory] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <View style={styles.container}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <QRCode
+              value={user.uid}
+              size={200}
+              color='#151e3d'
+            />
+            <View style={{ paddingTop: 20 }}>
+              <Icon.Button
+                name="eye-slash"
+                onPress={() => setModalVisible(!modalVisible)}
+                borderRadius={40}
+                backgroundColor={'#3ded97'}
+              >
+                <Text>Hide QR code</Text>
+              </Icon.Button>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <Text style={styles.titles}>Pending bookings:</Text>
-      <ScrollView>
+      <ScrollView style={{ height: '20%', padding: 5, }}>
         {history.map((e, index) => {
           console.log(e.bookingTime);
           if (e.status == "pending") {
@@ -58,8 +90,7 @@ const YourPlaces = ({ user }) => {
               <View key={index} style={{ alignItems: "center" }}>
                 <View>
                   <Text style={styles.locations}>
-                    {e.government}, {e.cityName}, {e.locationName},{" "}
-                    {e.partitionName}
+                    {e.government}, {e.cityName}, {e.locationName}, {e.partitionName}{e.slot}
                   </Text>
                 </View>
                 <View
@@ -70,7 +101,7 @@ const YourPlaces = ({ user }) => {
                 >
                   <View style={styles.btView}>
                     <Icon.Button
-                      name="send"
+                      name="location-arrow"
                       onPress={() => {
                         openLink(e.url);
                       }}
@@ -82,15 +113,15 @@ const YourPlaces = ({ user }) => {
                   </View>
                   <View style={styles.btView}>
                     <Icon.Button
-                      name="check"
+                      name="qrcode"
                       onPress={() => {
                         console.log(user.uid, index);
-                        checkIn(user.uid, index);
+                        setModalVisible(true);
                       }}
                       backgroundColor={"#3ded97"}
                       borderRadius={40}
                     >
-                      <Text>Check In</Text>
+                      <Text>Show QR code</Text>
                     </Icon.Button>
                   </View>
 
@@ -121,38 +152,27 @@ const YourPlaces = ({ user }) => {
         })}
       </ScrollView>
       <Text style={styles.titles}>Checked in bookings:</Text>
-      <ScrollView>
+      <ScrollView style={{ height: '20%', padding: 5, }}>
         {history.map((e, index) => {
           if (e.status == "Checked In") {
             return (
               <View key={index} style={{ alignItems: "center" }}>
                 <View>
                   <Text style={styles.locations}>
-                    {e.government}, {e.cityName}, {e.locationName},{" "}
-                    {e.partitionName}
+                    {e.government}, {e.cityName}, {e.locationName}, {e.partitionName}{e.slot}
                   </Text>
                 </View>
                 <View style={styles.btView}>
                   <Icon.Button
-                    name="sign-out"
+                    name="qrcode"
                     onPress={() => {
-                      checkout(
-                        user.uid,
-                        index,
-                        e.government,
-                        e.cityName,
-                        e.locationName,
-                        e.partitionName,
-                        e.slot
-                      );
-                      const timeDiff =
-                        e.bookingTime.seconds - new Date().getSeconds();
-                      deductFromWallet(user.uid, timeDiff, e.wallet);
+                      console.log(user.uid, index);
+                      setModalVisible(true);
                     }}
                     backgroundColor={"#3ded97"}
                     borderRadius={40}
                   >
-                    <Text>Check Out</Text>
+                    <Text>Show QR code</Text>
                   </Icon.Button>
                 </View>
               </View>
@@ -160,16 +180,15 @@ const YourPlaces = ({ user }) => {
           }
         })}
       </ScrollView>
-
       <Text style={styles.titles}>Your previous bookings:</Text>
-      <ScrollView>
+      <ScrollView style={{ height: '60%', padding: 5, }}>
         {history.map((e, index) => {
           if (e.status == "Checked out") {
             return (
-              <View key={index}>
+              <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }} key={index}>
+                <View style={{ backgroundColor: '#fff', height: 5, width: 5, borderRadius: 5, }}></View>
                 <Text style={styles.locations}>
-                  {e.government}, {e.cityName}, {e.locationName},{" "}
-                  {e.partitionName}
+                  {e.government}, {e.cityName}, {e.locationName}, {e.partitionName}{e.slot}
                 </Text>
               </View>
             );
@@ -184,14 +203,14 @@ export default YourPlaces;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 30,
+    padding: 10,
     backgroundColor: '#151e3d',
     flex: 1,
   },
   titles: {
     fontSize: 20,
     padding: 5,
-    color: '#fff'
+    color: '#3ded97',
   },
   locations: {
     fontSize: 16,
@@ -203,4 +222,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 3,
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+
 });

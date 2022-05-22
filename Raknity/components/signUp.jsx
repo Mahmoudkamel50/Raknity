@@ -37,6 +37,8 @@ export default function SignUp({ navigation }) {
               phoneNumber,
               history,
               wallet: 1000,
+              role: 'user',
+              banned: false,
             });
           });
           navigation.navigate("Sign in");
