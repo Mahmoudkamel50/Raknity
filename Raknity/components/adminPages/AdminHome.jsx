@@ -41,6 +41,9 @@ const AdminHome = ({ navigation }) => {
             name="remove"
             backgroundColor={"#3ded97"}
             borderRadius={40}
+            onPress={() => {
+                navigation.navigate('Cancel booking');
+            }}
           >
             <Text>Cancel booking</Text>
           </Icon.Button>

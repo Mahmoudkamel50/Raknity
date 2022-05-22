@@ -2,6 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AdminHome from "../adminPages/AdminHome";
 import BanUser from "../adminPages/BanUser";
+import CancelBooking from "../adminPages/CancelBooking";
 import EditUser from "../adminPages/EditUser";
 
 const Stack = createNativeStackNavigator();
@@ -42,7 +43,7 @@ export default function AdminStack() {
         />
         <Stack.Screen
           name="Cancel booking"
-          component={EditUser}
+          component={CancelBooking}
           options={{
             headerStyle: {
               backgroundColor: "#151e3d",

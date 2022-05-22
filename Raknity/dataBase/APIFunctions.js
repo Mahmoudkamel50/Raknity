@@ -393,7 +393,77 @@ async function pendingSlots() {
         }
       }
     }
+    console.log('slots', slots)
     return slots;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function adminCancelBooking(id) {
+  try {
+    let flag = false;
+    const govs = await getGovts();
+    let govId;
+    let citieslist;
+
+    for (let i = 0; i < govs.length; i++) {
+      for (let j = 0; j < govs[i].cities.length; j++) {
+        for (let k = 0; k < govs[i].cities[j].locations.length; k++) {
+          for (
+            let l = 0;
+            l < govs[i].cities[j].locations[k].partitions.length;
+            l++
+          ) {
+            for (
+              let m = 0;
+              m < govs[i].cities[j].locations[k].partitions[l].slots.length;
+              m++
+            ) {
+              if (
+                govs[i].cities[j].locations[k].partitions[l].slots[m]
+                  .occupiedBy == id
+              ) {
+                govs[i].cities[j].locations[k].partitions[l].slots[m].status =
+                  "empty";
+                govs[i].cities[j].locations[k].partitions[l].slots[
+                  m
+                ].occupiedBy = "";
+                flag = true;
+                govId = govs[i].id;
+                citieslist = govs[i].cities;
+                break;
+              }
+            }
+            if (flag == true) {
+              break;
+            }
+          }
+          if (flag == true) {
+            break;
+          }
+        }
+        if (flag == true) {
+          break;
+        }
+      }
+      if (flag == true) {
+        break;
+      }
+    }
+    console.log(id);
+    const docRef = doc(db, "locations", govId);
+    await updateDoc(docRef, {
+      cities: citieslist,
+    });
+
+    const user = await getUserById(id);
+    const history = user[0].history;
+    history[history.length - 1].status = "Cancelled";
+    const userRef = doc(db, "users", id);
+    await updateDoc(userRef, {
+      history: history,
+    });
   } catch (e) {
     console.error(e);
   }
@@ -413,4 +483,5 @@ export {
   checkinslotbyId,
   checkoutslotbyId,
   pendingSlots,
+  adminCancelBooking
 };
