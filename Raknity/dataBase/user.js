@@ -147,15 +147,14 @@ async function editUserWallet(email, addedWallet) {
     for (let i = 0; i < users.length; i++) {
       if (users[i].email == email) {
         id = users[i].id;
-        users[i].wallet = addedWallet;
-        wallet = users[i].wallet;
+        wallet = users[i].wallet + (+addedWallet);
         break;
       }
     }
     console.log(id);
     const docRef = doc(db, "users", id);
     await updateDoc(docRef, {
-      wallet: wallet,
+      wallet: +wallet,
     });
   } catch (e) {
     console.error(e);

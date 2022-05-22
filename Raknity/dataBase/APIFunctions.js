@@ -353,7 +353,7 @@ async function checkoutslotbyId(id) {
     const userRef = doc(db, "users", id);
 
     await updateDoc(userRef, {
-      wallet: newWallet.toFixed(3),
+      wallet: +newWallet.toFixed(3),
       history: history,
     });
     return { checkInTime, checkOutTime, timeDiffMin, payment };
