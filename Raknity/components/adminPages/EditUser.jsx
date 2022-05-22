@@ -23,18 +23,21 @@ const EditUser = () => {
           value={email}
           style={{ backgroundColor: "#d3d3d3", flex: 1, borderRadius: 40 }}
           textAlign={"center"}
+          keyboardType='email-address'
         />
       </View>
       <View style={{ flexDirection: "row", padding: 10 }}>
         <Text style={{ fontSize: 16, color: "#fff", padding: 10 }}>
-          Enter user wallet:
+          Add to user wallet:
         </Text>
         <TextInput
-          placeholder="Enter Wallet"
+          placeholder="Enter value to add"
           onChangeText={setWallet}
           value={wallet}
+          keyboardType='numeric'
           style={{ backgroundColor: "#d3d3d3", flex: 1, borderRadius: 40 }}
           textAlign={"center"}
+          
         />
       </View>
       <View

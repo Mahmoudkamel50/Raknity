@@ -24,6 +24,7 @@ const BanUser = () => {
                     value={email}
                     style={{ backgroundColor: '#d3d3d3', flex: 1, borderRadius: 40 }}
                     textAlign={'center'}
+                    keyboardType='email-address'
                 />
             </View>
             <View style={{ flexDirection: "row", justifyContent: "space-evenly", padding: 20}}>

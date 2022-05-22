@@ -32,7 +32,7 @@ export default function AdminStack() {
           }}
         />
         <Stack.Screen
-          name="edit user"
+          name="Edit user"
           component={EditUser}
           options={{
             headerStyle: {

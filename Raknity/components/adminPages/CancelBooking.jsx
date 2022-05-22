@@ -70,14 +70,21 @@ const CancelBooking = () => {
       <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#3ded97' }}>Users who have pending bookings</Text>
       <ScrollView style={{ height: '60%', padding: 5, }}>
         {users.map((e, index) => {
-          console.log(e);
           return (
             <View key={index}>
               <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
                 <View style={{ backgroundColor: '#fff', height: 5, width: 5, borderRadius: 5, }}></View>
-                <Text style={{ padding: 10, color: '#fff', fontSize: 16 }}>
-                  {e[0].firstName} {e[0].lastName} whose email is {e[0].email}
-                </Text>
+                <View style={{flexDirection: 'column'}}>
+                  <Text style={{ padding: 10, color: '#fff', fontSize: 16 }}>
+                    First name: {e[0].firstName}
+                  </Text>
+                  <Text style={{ padding: 10, color: '#fff', fontSize: 16 }}>
+                    Last name: {e[0].lastName}
+                  </Text>
+                  <Text style={{ padding: 10, color: '#fff', fontSize: 16 }}>
+                    E-mail: {e[0].email}
+                  </Text>
+                </View>
               </View>
               <View style={{ alignItems: 'center' }}>
                 <Icon.Button

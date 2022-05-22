@@ -27,7 +27,7 @@ const AdminHome = ({ navigation }) => {
             backgroundColor={"#3ded97"}
             borderRadius={40}
             onPress={() => {
-              navigation.navigate("edit user");
+              navigation.navigate("Edit user");
             }}
           >
             <Text>Edit user</Text>
