@@ -84,6 +84,9 @@ const CancelBooking = () => {
                   <Text style={{ padding: 10, color: '#fff', fontSize: 16 }}>
                     E-mail: {e[0].email}
                   </Text>
+                  <Text style={{ padding: 10, color: '#fff', fontSize: 16 }}>
+                    Location: {e[0].history[e[0].history.length - 1].locationName}
+                  </Text>
                 </View>
               </View>
               <View style={{ alignItems: 'center' }}>

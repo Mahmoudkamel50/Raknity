@@ -210,7 +210,7 @@ const Homepage = ({ user, navigation }) => {
         Start your booking
       </Text>
       <View style={styles.pckView}>
-        <Text style={styles.textStyle}>Choose a government:</Text>
+        <Text style={styles.textStyle}>Choose a governorate:</Text>
         <Picker
           selectedValue={chosenGovt}
           onValueChange={(govt, index) => {
