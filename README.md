@@ -34,7 +34,7 @@ Screenshots of the app:
     c. Check in screens:
     ![Alt text](./screenshots/checkinWelcome.jpg?raw=true "Welcome")
     ![Alt text](./screenshots/checkinScan.jpg?raw=true "Scan your QR code")
-    ![Alt text](./screenshots/checkinCheckid.jpg.jpg?raw=true "Check your identity")
+    ![Alt text](./screenshots/checkinCheckid.jpg?raw=true "Check your identity")
     d. Check out screens:
     ![Alt text](./screenshots/checkoutWelcome.jpg?raw=true "Welcome")
     ![Alt text](./screenshots/checkoutScan.jpg?raw=true "Scan your QR code")
