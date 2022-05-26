@@ -28,7 +28,7 @@ Screenshots of the app:
     ![Alt text](./screenshots/editProfile.jpg?raw=true "Edit profile")
     b. Admin screens:
     ![Alt text](./screenshots/adminHome.jpg?raw=true "Home")
-    ![Alt text](./screenshots/banUnban.jpg?raw=true "Ban user")
+    ![Alt text](./screenshots/banunban.jpg?raw=true "Ban user")
     ![Alt text](./screenshots/editUser.jpg?raw=true "Edit user")
     ![Alt text](./screenshots/cancelBooking.jpg?raw=true "Cancel booking")
     c. Check in screens:
