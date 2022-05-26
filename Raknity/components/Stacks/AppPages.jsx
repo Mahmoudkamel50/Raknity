@@ -15,7 +15,7 @@ const Stack = createNativeStackNavigator();
 function User({ user }) {
   return (
     <Stack.Navigator>
-      <Stack.Screen name='Profile'
+      <Stack.Screen name='Your information'
         options={{
           headerStyle: {
             backgroundColor: '#151e3d'

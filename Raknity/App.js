@@ -10,9 +10,7 @@ import CheckInStack from "./components/Stacks/CheckInStack";
 import CheckOutStack from "./components/Stacks/CheckOutStack";
 import AdminStack from "./components/Stacks/AdminStack";
 import Banned from "./components/Banned";
-
-
-
+import { subscribe } from "./dataBase/APIFunctions";
 
 export default function App() {
 
@@ -29,9 +27,6 @@ export default function App() {
         })
       }
     });
-
-
-
     return () => {
       unsub();
     };

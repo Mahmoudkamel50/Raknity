@@ -82,7 +82,7 @@ export default SignIn;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 30,
+    padding: 10,
     flexDirection: "column",
     backgroundColor: '#151e3d'
   },

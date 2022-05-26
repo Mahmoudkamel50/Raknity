@@ -94,19 +94,36 @@ export default function CheckOutQrScanner({ navigation }) {
                                 <Text style={{ fontSize: 16, padding: 5, }}>Your email: {email}</Text>
                             </View>
                             : null}
-                        <View style={styles.btview}>
-                            <Icon.Button
-                                name='check'
-                                backgroundColor={'#3ded97'}
-                                borderRadius={40}
-                                onPress={() => {
-                                    checkOut();
-                                    setModalVisibleconf(false);
-                                    setModalVisiblerec(true);
-                                }}
-                            >
-                                <Text>Confirm</Text>
-                            </Icon.Button>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <View style={styles.btview}>
+                                <Icon.Button
+                                    name='remove'
+                                    backgroundColor={'#f00'}
+                                    borderRadius={40}
+                                    onPress={() => {
+                                        setScanned(false);
+                                        setName("");
+                                        setEmail("");
+                                        setModalVisibleconf(false);
+                                    }}
+                                >
+                                    <Text>It's not me</Text>
+                                </Icon.Button>
+                            </View>
+                            <View style={styles.btview}>
+                                <Icon.Button
+                                    name='check'
+                                    backgroundColor={'#3ded97'}
+                                    borderRadius={40}
+                                    onPress={() => {
+                                        checkOut();
+                                        setModalVisibleconf(false);
+                                        setModalVisiblerec(true);
+                                    }}
+                                >
+                                    <Text>Confirm</Text>
+                                </Icon.Button>
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -128,7 +145,7 @@ export default function CheckOutQrScanner({ navigation }) {
                                 <Text style={{ fontSize: 16, padding: 5, }}>You Checked In at: {checkInT.toString()}</Text>
                                 <Text style={{ fontSize: 16, padding: 5, }}>You Checked Out at: {checkOutT.toString()}</Text>
                                 <Text style={{ fontSize: 16, padding: 5, }}>You Spent: {timespent} MINS</Text>
-                                <Text style={{ fontSize: 16, padding: 5, }}>You Paied: {payment} EGP</Text>
+                                <Text style={{ fontSize: 16, padding: 5, }}>You Paid: {payment} EGP</Text>
                             </View>
                             : null}
                         <View style={styles.btview}>
@@ -160,6 +177,7 @@ const styles = StyleSheet.create({
     },
     btview: {
         paddingTop: 20,
+        paddingHorizontal: 5,
     },
     camView: {
         width: '85%',

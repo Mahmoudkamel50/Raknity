@@ -201,7 +201,6 @@ const Homepage = ({ user, navigation }) => {
   const [slotIndex, setSlotIndex] = useState("");
   const [citiesIndex, setCitiesIndex] = useState("");
   const [locIndex, setLocIndex] = useState("");
-  const [url, setUrl] = useState("");
 
   return (
     <View style={{ flex: 1, padding: 30, backgroundColor: "#151e3d" }}>
@@ -211,7 +210,7 @@ const Homepage = ({ user, navigation }) => {
         Start your booking
       </Text>
       <View style={styles.pckView}>
-        <Text style={styles.textStyle}>Choose a government:</Text>
+        <Text style={styles.textStyle}>Choose a governorate:</Text>
         <Picker
           selectedValue={chosenGovt}
           onValueChange={(govt, index) => {
