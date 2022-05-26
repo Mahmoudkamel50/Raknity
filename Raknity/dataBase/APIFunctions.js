@@ -197,23 +197,6 @@ async function cancel(
   }
 }
 
-async function deductFromWallet(id, timeDiff, wallet) {
-  try {
-    console.log(timeDiff);
-    const timeDiffMin = timeDiff / 60;
-    const timeDiffHrs = timeDiffMin / 60;
-    const EGP_PER_HOUR = 7;
-    const finalPrice = EGP_PER_HOUR * timeDiffHrs;
-    wallet = wallet - finalPrice;
-    const docRef = doc(db, "users", id);
-    await updateDoc(docRef, {
-      wallet: wallet,
-    });
-  } catch (e) {
-    console.error(e);
-  }
-}
-
 async function checkinslotbyId(id) {
   try {
     let flag = false;
@@ -393,7 +376,7 @@ async function pendingSlots() {
         }
       }
     }
-    console.log('slots', slots)
+    console.log("slots", slots);
     return slots;
   } catch (e) {
     console.error(e);
@@ -477,11 +460,10 @@ export {
   getAllSlots,
   submition,
   subscribe,
-  deductFromWallet,
   cancel,
   getURL,
   checkinslotbyId,
   checkoutslotbyId,
   pendingSlots,
-  adminCancelBooking
+  adminCancelBooking,
 };
